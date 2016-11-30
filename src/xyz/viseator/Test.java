@@ -8,10 +8,10 @@ import org.opencv.core.Core;
 public class Test {
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        final String PATH = "C:/Users/visea/Desktop/test/1.jpg";
+        final String PATH = "C:/Users/visea/Desktop/test/2.jpg";
         ProgressPic progressPic;
         progressPic = new ProgressPic();
-        progressPic.progress(PATH,1);
+        progressPic.progress(PATH,2);
 
     }
 }

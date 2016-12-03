@@ -14,6 +14,7 @@ import javax.imageio.IIOException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.*;
 
 /**
  * Created by Lily on 2016/12/1.
@@ -27,9 +28,11 @@ public class OCRHandler {
     public static final int FILTER_YIN_YANG = 3;
 
     private static final String dataPath = "C:\\Program Files (x86)\\Tesseract-OCR";
+
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
-    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"',<.>/?﹔︰﹕﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪";
+    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"',<.>/?﹔︰﹕﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪一ˇ丶";
+    private Map<Character, ArrayList<Character>> wordsList;
 
     public String getTextFromPic(BufferedImage image, int mode, int filter){
         apiManager = TessAPI.INSTANCE;
@@ -56,14 +59,37 @@ public class OCRHandler {
                 break;
         }
         Pointer pointer = apiManager.TessBaseAPIGetUTF8Text(handler);
-        String result = pointer.getString(0);
+        String result = handleDetail(pointer.getString(0));
         return result != null ? result.trim() : null;
     }
 
-//    private String handleDetail(String output){
-//        StringBuffer resultBuffer = new StringBuffer();
-//
-//
-//    }
+    private String handleDetail(String output){
+        initialWordsList();
+        StringBuffer resultBuffer = new StringBuffer(output);
+        Set<Character> errorList = wordsList.keySet();
+        for(int i = 0; i < resultBuffer.length(); i++){
+            if(errorList.contains(resultBuffer.charAt(i))){
+                if((i != 0 && wordsList.get(resultBuffer.charAt(i)).contains(resultBuffer.charAt(i - 1))) ||
+                        (i != resultBuffer.length() && wordsList.get(resultBuffer.charAt(i)).contains(resultBuffer.charAt(i + 1)))){
+                    resultBuffer.setCharAt(i, wordsList.get(resultBuffer.charAt(i)).get(0));
+                }
+            }
+        }
+        return resultBuffer.toString();
+    }
+
+    private void initialWordsList(){
+        addWordList('壳', '亮', new Character[]{'度'});
+        addWordList('菅', '管', new Character[]{'道','导'});
+    }
+
+    private void addWordList(Character aim, Character result, Character[] conditions){
+        if(wordsList == null)
+            wordsList = new HashMap<>();
+        ArrayList<Character> lists = new ArrayList<>();
+        lists.add(result);
+        lists.addAll(Arrays.asList(conditions));
+        wordsList.put(aim, lists);
+    }
 
 }

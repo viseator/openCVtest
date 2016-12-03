@@ -29,10 +29,10 @@ public class MainTest {
 //        System.out.println(result);
 
         ArrayList<BufferedImage> bufferedImages;
-        bufferedImages = new ProgressPic().progress("C:/Users/visea/Desktop/test/4.jpg", 4);
+        bufferedImages = new ProgressPic().progress("C:/Users/visea/Desktop/test/5.jpg", 5);
 
         for (BufferedImage image : bufferedImages) {
-            String result = new OCRHandler().getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SPARSE_TEXT,
+            String result = new OCRHandler().getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_BLOCK,
                     OCRHandler.FILTER_CHI);
             System.out.println(result);
         }

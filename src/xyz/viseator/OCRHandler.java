@@ -29,7 +29,7 @@ public class OCRHandler {
     private static final String dataPath = "C:\\Program Files (x86)\\Tesseract-OCR";
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
-    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"',<.>/?﹔︰﹕﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪";
+    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"',<.>/?﹔︰﹕丶ˇ一﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪";
 
     public String getTextFromPic(BufferedImage image, int mode, int filter){
         apiManager = TessAPI.INSTANCE;

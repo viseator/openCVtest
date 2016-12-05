@@ -31,7 +31,7 @@ public class OCRHandler {
 
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
-    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"',<.>/?﹔︰﹕﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪一ˇ丶";
+    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<.>/?﹔︰﹕﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
     private Map<Character, ArrayList<Character>> wordsList;
 
     public String getTextFromPic(BufferedImage image, int mode, int filter){

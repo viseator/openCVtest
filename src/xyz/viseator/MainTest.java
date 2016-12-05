@@ -36,6 +36,7 @@ public class MainTest {
                     OCRHandler.FILTER_CHI);
             System.out.println(result);
         }*/
+
     }
 
 }

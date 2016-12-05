@@ -1,5 +1,6 @@
 package xyz.viseator;
 
+import net.sourceforge.tess4j.ITessAPI;
 import org.opencv.core.Core;
 
 import javax.imageio.ImageIO;
@@ -15,7 +16,7 @@ public class WudiTest {
     public static void main(String[] args) {
         ArrayList<ArrayList<BufferedImage>> bufferedImages;
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        final int pic = 4;
+        final int pic = 5;
         final String PATH = "C:/Users/visea/Desktop/test/" +
                 String.valueOf(pic) + ".jpg";
         ProgressPic progressPic;
@@ -29,10 +30,14 @@ public class WudiTest {
                     File file = new File("C:/Users/visea/Desktop/test/java/cut5/" +
                             String.valueOf(cols) + "_" + String.valueOf(character) + ".jpg");
                     ImageIO.write(image,"jpg",file);
+                    String result = new OCRHandler().getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR,
+                            OCRHandler.FILTER_CHI);
+                    System.out.print(result);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+            System.out.println();
         }
     }
 }

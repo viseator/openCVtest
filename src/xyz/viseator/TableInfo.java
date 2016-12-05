@@ -16,10 +16,13 @@ public class TableInfo {
 
     public TableInfo(int colsSize) {
         this.colsSize = colsSize;
-        cols = new ArrayList<>(colsSize);
+        cols = new ArrayList<>();
+        for (int i = 0; i < colsSize; i++) {
+            cols.add(new ColumnInfo());
+        }
     }
 
-    public void initColumn(int position,int dataType) {
+    public void initColumn(int position, int dataType) {
         ColumnInfo columnInfo = cols.get(position);
         switch (dataType) {
             case DATA_TYPE_NUMBER_0_1:
@@ -60,13 +63,21 @@ public class TableInfo {
         this.cols = cols;
     }
 
-    private class ColumnInfo {
+    public class ColumnInfo {
 
         private int dataType;
         private int boundLeft;
         private int boundRight;
-        private BufferedImage bufferedImage;
+        private ArrayList<BufferedImage> bufferedImage;
         private String result;
+
+        public ArrayList<BufferedImage> getBufferedImage() {
+            return bufferedImage;
+        }
+
+        public void setBufferedImage(ArrayList<BufferedImage> bufferedImage) {
+            this.bufferedImage = bufferedImage;
+        }
 
         public int getDataType() {
             return dataType;
@@ -90,14 +101,6 @@ public class TableInfo {
 
         public void setBoundRight(int boundRight) {
             this.boundRight = boundRight;
-        }
-
-        public BufferedImage getBufferedImage() {
-            return bufferedImage;
-        }
-
-        public void setBufferedImage(BufferedImage bufferedImage) {
-            this.bufferedImage = bufferedImage;
         }
 
         public String getResult() {

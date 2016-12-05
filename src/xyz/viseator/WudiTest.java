@@ -18,7 +18,7 @@ public class WudiTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         ArrayList<TableInfo> tables;
 
-        final int pic = 5;
+        final int pic = 4;
         final boolean singleLineMode = false;
 
         final String PATH = "C:/Users/visea/Desktop/test/" +

@@ -16,6 +16,7 @@ public class WudiTest {
     public static void main(String[] args) {
         ArrayList<ArrayList<BufferedImage>> bufferedImages;
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        ArrayList<TableInfo> tables;
 
         final int pic = 5;
         final boolean singleLineMode = false;

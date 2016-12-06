@@ -7,66 +7,66 @@ import java.util.ArrayList;
  * Created by viseator on 2016/12/5.
  */
 public class TableInfo {
-    private int colsSize;
+    private int rowsSize;
     private static final double DEFAULT_FILTERGAP = 0;
     public static final int DATA_TYPE_NUMBER_0_1 = 0;
     public static final int DATA_TYPE_NUMBER_1_2 = 1;
     public static final int DATA_TYPE_STRING_0_1 = 2;
     public static final int DATA_TYPE_STRING_1_2 = 3;
-    private ArrayList<ColumnInfo> cols;
+    private ArrayList<RowInfo> rows;
 
-    public TableInfo(int colsSize) {
-        this.colsSize = colsSize;
-        cols = new ArrayList<>();
-        for (int i = 0; i < colsSize; i++) {
-            cols.add(new ColumnInfo());
+    public TableInfo(int rowsSize) {
+        this.rowsSize = rowsSize;
+        rows = new ArrayList<>();
+        for (int i = 0; i < rowsSize; i++) {
+            rows.add(new RowInfo());
         }
     }
 
     public void initColumn(int position, int dataType) {
-        ColumnInfo columnInfo = cols.get(position);
-        columnInfo.setFilterGap(DEFAULT_FILTERGAP);
+        RowInfo rowInfo = rows.get(position);
+        rowInfo.setFilterGap(DEFAULT_FILTERGAP);
         switch (dataType) {
             case DATA_TYPE_NUMBER_0_1:
-                columnInfo.setDataType(dataType);
-                columnInfo.setBoundLeft(0);
-                columnInfo.setBoundRight(1);
+                rowInfo.setDataType(dataType);
+                rowInfo.setBoundLeft(0);
+                rowInfo.setBoundRight(1);
                 break;
             case DATA_TYPE_NUMBER_1_2:
-                columnInfo.setDataType(dataType);
-                columnInfo.setBoundLeft(1);
-                columnInfo.setBoundRight(2);
+                rowInfo.setDataType(dataType);
+                rowInfo.setBoundLeft(1);
+                rowInfo.setBoundRight(2);
                 break;
 
             case DATA_TYPE_STRING_0_1:
-                columnInfo.setDataType(dataType);
-                columnInfo.setBoundLeft(0);
-                columnInfo.setBoundRight(1);
-                columnInfo.setFilterGap(0.3);
+                rowInfo.setDataType(dataType);
+                rowInfo.setBoundLeft(0);
+                rowInfo.setBoundRight(1);
+                rowInfo.setFilterGap(0.3);
                 break;
 
             case DATA_TYPE_STRING_1_2:
-                columnInfo.setDataType(dataType);
-                columnInfo.setBoundLeft(1);
-                columnInfo.setBoundRight(2);
+                rowInfo.setDataType(dataType);
+                rowInfo.setBoundLeft(1);
+                rowInfo.setBoundRight(2);
                 break;
         }
     }
 
-    public int getColsSize() {
-        return colsSize;
+    public int getRowsSize() {
+        return rowsSize;
     }
 
 
-    public ColumnInfo getCols(int position) {
-        return cols.get(position);
+    public RowInfo getRows(int position) {
+        return rows.get(position);
     }
 
-    public void setCols(ArrayList<ColumnInfo> cols) {
-        this.cols = cols;
+    public void setRows(ArrayList<RowInfo> rows) {
+        this.rows = rows;
     }
 
-    public class ColumnInfo {
+    public class RowInfo {
 
         private double filterGap;
         private int dataType;

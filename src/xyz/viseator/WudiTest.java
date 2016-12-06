@@ -28,16 +28,16 @@ public class WudiTest {
         BufferedImage image;
         OCRHandler ocrHandler = new OCRHandler();
         ocrHandler.init();
-        for (int cols = 0; cols < tableInfo.getColsSize(); cols++) {
-            for (int character = 0; character < tableInfo.getCols(cols).getChaSize(); character++) {
+        for (int rows = 0; rows < tableInfo.getRowsSize(); rows++) {
+            for (int character = 0; character < tableInfo.getRows(rows).getChaSize(); character++) {
                 try {
-                    image = tableInfo.getCols(cols).getBufferedImage(character);
+                    image = tableInfo.getRows(rows).getBufferedImage(character);
                     File file = new File("C:/Users/visea/Desktop/test/java/cut5/" +
-                            String.valueOf(cols) + "_" + String.valueOf(character) + ".jpg");
+                            String.valueOf(rows) + "_" + String.valueOf(character) + ".jpg");
                     ImageIO.write(image, "jpg", file);
                     String result = ocrHandler.getTextFromPic(image,
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE,
-                            tableInfo.getCols(cols).getDataType() <= 1 ? OCRHandler.FILTER_NUM : OCRHandler.FILTER_CHI);
+                            tableInfo.getRows(rows).getDataType() <= 1 ? OCRHandler.FILTER_NUM : OCRHandler.FILTER_CHI);
                     System.out.print(result);
                 } catch (IOException e) {
                     e.printStackTrace();

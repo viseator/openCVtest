@@ -1,3 +1,4 @@
+/*
 package xyz.viseator;
 
 import net.sourceforge.tess4j.ITessAPI;
@@ -9,9 +10,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+*/
 /**
  * Created by viseator on 2016/11/21.
- */
+ *//*
+
 public class WudiTest {
     public static void main(String[] args) {
         ArrayList<ArrayList<BufferedImage>> bufferedImages;
@@ -47,3 +50,4 @@ public class WudiTest {
         }
     }
 }
+*/

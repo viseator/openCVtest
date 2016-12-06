@@ -14,32 +14,16 @@ import java.io.IOException;
  */
 public class MainTest {
 
-    static{
+    static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     public static void main(String args[]) {
-
-
-        BufferedImage image = null;
-        try {
-            File file = new File("C:/Users/visea/Desktop/test/test.jpg");
-            image = ImageIO.read(new FileInputStream(file));
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-        String result = new OCRHandler().getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE, OCRHandler.FILTER_CHI);
-        System.out.println(result);
-
-//        ArrayList<BufferedImage> bufferedImages;
-/*        bufferedImages = new ProgressPic().progress("C:/Users/visea/Desktop/test/5.jpg", 5);
-
-        for (BufferedImage image : bufferedImages) {
-            String result = new OCRHandler().getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_BLOCK,
-                    OCRHandler.FILTER_CHI);
-            System.out.println(result);
-        }*/
-
+        final int pic = 5;
+        final String PATH = "C:/Users/visea/Desktop/test/" +
+                String.valueOf(pic) + ".jpg";
+        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR");
+        ocr.execute(PATH, pic);
     }
 
 }

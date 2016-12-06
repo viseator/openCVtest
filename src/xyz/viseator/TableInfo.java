@@ -30,25 +30,25 @@ public class TableInfo {
             case DATA_TYPE_NUMBER_0_1:
                 rowInfo.setDataType(dataType);
                 rowInfo.setBoundLeft(0);
-                rowInfo.setBoundRight(1);
+                rowInfo.setBorderRight(1);
                 break;
             case DATA_TYPE_NUMBER_1_2:
                 rowInfo.setDataType(dataType);
                 rowInfo.setBoundLeft(1);
-                rowInfo.setBoundRight(2);
+                rowInfo.setBorderRight(2);
                 break;
 
             case DATA_TYPE_STRING_0_1:
                 rowInfo.setDataType(dataType);
                 rowInfo.setBoundLeft(0);
-                rowInfo.setBoundRight(1);
+                rowInfo.setBorderRight(1);
                 rowInfo.setFilterGap(0.3);
                 break;
 
             case DATA_TYPE_STRING_1_2:
                 rowInfo.setDataType(dataType);
                 rowInfo.setBoundLeft(1);
-                rowInfo.setBoundRight(2);
+                rowInfo.setBorderRight(2);
                 break;
         }
     }
@@ -71,7 +71,7 @@ public class TableInfo {
         private double filterGap;
         private int dataType;
         private int boundLeft;
-        private int boundRight;
+        private int borderRight;
         private ArrayList<BufferedImage> bufferedImages;
         private String result;
 
@@ -111,12 +111,12 @@ public class TableInfo {
             this.boundLeft = boundLeft;
         }
 
-        public int getBoundRight() {
-            return boundRight;
+        public int getBorderRight() {
+            return borderRight;
         }
 
-        public void setBoundRight(int boundRight) {
-            this.boundRight = boundRight;
+        public void setBorderRight(int borderRight) {
+            this.borderRight = borderRight;
         }
 
         public String getResult() {

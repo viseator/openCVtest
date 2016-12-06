@@ -36,13 +36,13 @@ public class OCR {
     }
 
     public void execute(String picPath, int numOfPic){
-        tableInfo = progressPic.progress(picPath, numOfPic, false);
-        for (int cols = 0; cols < tableInfo.getRowsSize(); cols++) {
+        tableInfo = progressPic.progress(picPath, numOfPic);
+        for (int row = 0; row < tableInfo.getRowsSize(); row++) {
             StringBuffer resultOfColBuffer = new StringBuffer();
-            for (int character = 0; character < tableInfo.getRows(cols).getChaSize(); character++) {
+            for (int character = 0; character < tableInfo.getRows(row).getChaSize(); character++) {
                 BufferedImage image;
-                image = tableInfo.getRows(cols).getBufferedImage(character);
-                if(tableInfo.getRows(cols).getDataType() <= 1){
+                image = tableInfo.getRows(row).getBufferedImage(character);
+                if(tableInfo.getRows(row).getDataType() <= 1){
                     resultOfColBuffer.append(handlerNum.getTextFromPic(image,
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
                 }else{
@@ -50,8 +50,9 @@ public class OCR {
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
                 }
             }
-            String resultOfCol = OCRHandler.handleDetail(resultOfColBuffer.toString(), tableInfo.getRows(cols).getDataType() <= 1);
-            System.out.println(resultOfCol);
+            String resultOfRow = OCRHandler.handleDetail(resultOfColBuffer.toString(), tableInfo.getRows(row).getDataType() <= 1);
+            tableInfo.getRows(row).setResult(resultOfRow);
+            System.out.println(resultOfRow);
         }
     }
 

@@ -18,7 +18,7 @@ public class WudiTest {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         ArrayList<TableInfo> tables;
 
-        final int pic = 4;
+        final int pic = 5;
         final boolean singleLineMode = false;
 
         final String PATH = "C:/Users/visea/Desktop/test/" +
@@ -36,7 +36,8 @@ public class WudiTest {
                     File file = new File("C:/Users/visea/Desktop/test/java/cut5/" +
                             String.valueOf(cols) + "_" + String.valueOf(character) + ".jpg");
                     ImageIO.write(image,"jpg",file);
-                    String result = ocrHandler.getTextFromPic(image, singleLineMode?ITessAPI.TessPageSegMode.PSM_SINGLE_LINE:ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR,
+                    String result = ocrHandler.getTextFromPic(image,
+                            true?ITessAPI.TessPageSegMode.PSM_SINGLE_LINE:ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR,
                             OCRHandler.FILTER_CHI);
                     System.out.print(result);
                 } catch (IOException e) {

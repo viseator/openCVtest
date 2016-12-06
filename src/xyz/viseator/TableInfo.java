@@ -8,6 +8,7 @@ import java.util.ArrayList;
  */
 public class TableInfo {
     private int colsSize;
+    private static final double DEFAULT_FILTERGAP = 0;
     public static final int DATA_TYPE_NUMBER_0_1 = 0;
     public static final int DATA_TYPE_NUMBER_1_2 = 1;
     public static final int DATA_TYPE_STRING_0_1 = 2;
@@ -24,6 +25,7 @@ public class TableInfo {
 
     public void initColumn(int position, int dataType) {
         ColumnInfo columnInfo = cols.get(position);
+        columnInfo.setFilterGap(DEFAULT_FILTERGAP);
         switch (dataType) {
             case DATA_TYPE_NUMBER_0_1:
                 columnInfo.setDataType(dataType);
@@ -40,6 +42,7 @@ public class TableInfo {
                 columnInfo.setDataType(dataType);
                 columnInfo.setBoundLeft(0);
                 columnInfo.setBoundRight(1);
+                columnInfo.setFilterGap(0.3);
                 break;
 
             case DATA_TYPE_STRING_1_2:
@@ -65,11 +68,20 @@ public class TableInfo {
 
     public class ColumnInfo {
 
+        private double filterGap;
         private int dataType;
         private int boundLeft;
         private int boundRight;
         private ArrayList<BufferedImage> bufferedImage;
         private String result;
+
+        public double getFilterGap() {
+            return filterGap;
+        }
+
+        public void setFilterGap(double filterGap) {
+            this.filterGap = filterGap;
+        }
 
         public ArrayList<BufferedImage> getBufferedImage() {
             return bufferedImage;

@@ -31,13 +31,14 @@ public class OCRHandler {
 
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
-    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<>/?﹔︰﹕﹐．﹒˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
+    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<>/?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
     private Map<Character, ArrayList<Character>> wordsList;
 
     public void init() {
         apiManager = TessAPI.INSTANCE;
         handler = apiManager.TessBaseAPICreate();
         apiManager.TessBaseAPIInit3(handler, dataPath, "chi_sim");
+        apiManager.TessBaseAPISetVariable(handler,"enable_new_segsearch","0");
     }
 
     public String getTextFromPic(BufferedImage image, int mode, int filter){

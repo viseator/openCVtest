@@ -23,16 +23,16 @@ public class OCR {
     private ProgressPic progressPic;
     private TableInfo tableInfo;
 
-    public OCR(String dataPath, String language){
+    public OCR(String dataPath, String language, String dicPath){
         handlerNum = new OCRHandler();
-        handlerNum.init(dataPath, language, OCRHandler.FILTER_NUM);
+        handlerNum.init(dataPath, dicPath, "eng", OCRHandler.FILTER_NUM);
         handlerChi = new OCRHandler();
-        handlerChi.init(dataPath, language, OCRHandler.FILTER_CHI);
+        handlerChi.init(dataPath, dicPath, language, OCRHandler.FILTER_CHI);
         progressPic = new ProgressPic();
     }
 
-    public OCR(String dataPath){
-        this(dataPath, "chi_sim");
+    public OCR(String dataPath, String dicPath){
+        this(dataPath, "chi_sim", dicPath);
     }
 
     public void execute(String picPath, int numOfPic){

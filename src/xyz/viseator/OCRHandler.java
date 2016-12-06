@@ -28,13 +28,14 @@ public class OCRHandler {
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
     private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<>/?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
-    private Map<Character, ArrayList<Character>> wordsList;
+    private static CharacterFixer fixer;
 
-    public void init(String dataPath, String language, int filter) {
+    public void init(String dataPath, String dicPath, String language, int filter) {
         apiManager = TessAPI.INSTANCE;
         handler = apiManager.TessBaseAPICreate();
         apiManager.TessBaseAPIInit3(handler, dataPath, language);
         apiManager.TessBaseAPISetVariable(handler,"enable_new_segsearch","0");
+        fixer = new CharacterFixer(dicPath);
         switch (filter){
             case FILTER_NUM:
                 apiManager.TessBaseAPISetVariable(handler, "tessedit_char_whitelist","0123456789.");
@@ -74,29 +75,16 @@ public class OCRHandler {
         for(int i = 0; i < resultBuffer.length(); i++){
             if(resultBuffer.charAt(i) == ' ')
                 resultBuffer.deleteCharAt(i);
+            if(resultBuffer.charAt(i) == '.' && (i == resultBuffer.length() - 1))
+                resultBuffer.deleteCharAt(i);
         }
         return resultBuffer.toString();
     }
 
     private static String handleChi(String output){
-//        StringBuffer resultBuffer = new StringBuffer(output);
-//
-//        return resultBuffer.toString();
-        return output;
+        return fixer.fixChars(output);
     }
 
-    private void initialWordsList(){
-        addWordList('壳', '亮', new Character[]{'度'});
-        addWordList('菅', '管', new Character[]{'道','导'});
-    }
 
-    private void addWordList(Character aim, Character result, Character[] conditions){
-        if(wordsList == null)
-            wordsList = new HashMap<>();
-        ArrayList<Character> lists = new ArrayList<>();
-        lists.add(result);
-        lists.addAll(Arrays.asList(conditions));
-        wordsList.put(aim, lists);
-    }
 
 }

@@ -19,11 +19,12 @@ public class MainTest {
     }
 
     public static void main(String args[]) {
-        final int pic = 5;
-        final String PATH = "C:/Users/visea/Desktop/test/" +
-                String.valueOf(pic) + ".jpg";
-        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR");
-        ocr.execute(PATH, pic);
+        for(int pic = 1; pic <= 5; pic++) {
+            String PATH = "C:\\Users\\Lily\\Desktop\\test\\resource\\" +
+                    String.valueOf(pic) + ".jpg";
+            OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "C:\\Users\\Lily\\Desktop\\test\\dic.txt");
+            ocr.execute(PATH, pic);
+        }
     }
 
 }

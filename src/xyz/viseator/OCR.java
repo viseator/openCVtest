@@ -25,7 +25,7 @@ public class OCR {
 
     public OCR(String dataPath, String language){
         handlerNum = new OCRHandler();
-        handlerNum.init(dataPath, language, OCRHandler.FILTER_NUM);
+        handlerNum.init(dataPath, "eng", OCRHandler.FILTER_NUM);
         handlerChi = new OCRHandler();
         handlerChi.init(dataPath, language, OCRHandler.FILTER_CHI);
         progressPic = new ProgressPic();

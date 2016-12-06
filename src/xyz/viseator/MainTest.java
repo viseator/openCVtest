@@ -19,7 +19,7 @@ public class MainTest {
     }
 
     public static void main(String args[]) {
-        final int pic = 5;
+        final int pic = 3;
         final String PATH = "C:/Users/visea/Desktop/test/" +
                 String.valueOf(pic) + ".jpg";
         OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR");

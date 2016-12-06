@@ -58,8 +58,8 @@ public class TableInfo {
     }
 
 
-    public ArrayList<ColumnInfo> getCols() {
-        return cols;
+    public ColumnInfo getCols(int position) {
+        return cols.get(position);
     }
 
     public void setCols(ArrayList<ColumnInfo> cols) {
@@ -72,7 +72,7 @@ public class TableInfo {
         private int dataType;
         private int boundLeft;
         private int boundRight;
-        private ArrayList<BufferedImage> bufferedImage;
+        private ArrayList<BufferedImage> bufferedImages;
         private String result;
 
         public double getFilterGap() {
@@ -83,12 +83,16 @@ public class TableInfo {
             this.filterGap = filterGap;
         }
 
-        public ArrayList<BufferedImage> getBufferedImage() {
-            return bufferedImage;
+        public BufferedImage getBufferedImage(int position) {
+            return bufferedImages.get(position);
         }
 
-        public void setBufferedImage(ArrayList<BufferedImage> bufferedImage) {
-            this.bufferedImage = bufferedImage;
+        public int getChaSize() {
+            return bufferedImages.size();
+        }
+
+        public void setBufferedImages(ArrayList<BufferedImage> bufferedImages) {
+            this.bufferedImages = bufferedImages;
         }
 
         public int getDataType() {

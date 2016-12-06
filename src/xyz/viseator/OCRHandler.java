@@ -35,14 +35,18 @@ public class OCRHandler {
     private Map<Character, ArrayList<Character>> wordsList;
 
     public void init() {
-        apiManager = TessAPI.INSTANCE;
+/*        apiManager = TessAPI.INSTANCE;
         handler = apiManager.TessBaseAPICreate();
         apiManager.TessBaseAPIInit3(handler, dataPath, "chi_sim");
-        apiManager.TessBaseAPISetVariable(handler,"enable_new_segsearch","0");
+        apiManager.TessBaseAPISetVariable(handler,"enable_new_segsearch","0");*/
     }
 
     public String getTextFromPic(BufferedImage image, int mode, int filter){
         try {
+            apiManager = TessAPI.INSTANCE;
+            handler = apiManager.TessBaseAPICreate();
+            apiManager.TessBaseAPIInit3(handler, dataPath, "chi_sim");
+            apiManager.TessBaseAPISetVariable(handler,"enable_new_segsearch","0");
             apiManager.TessBaseAPISetImage2(handler, LeptUtils.convertImageToPix(image));
         }catch (IOException e){
             e.printStackTrace();

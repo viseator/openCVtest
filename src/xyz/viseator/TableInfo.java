@@ -23,7 +23,7 @@ public class TableInfo {
         }
     }
 
-    public void initColumn(int position, int dataType) {
+    public void initRow(int position, int dataType) {
         RowInfo rowInfo = rows.get(position);
         rowInfo.setFilterGap(DEFAULT_FILTERGAP);
         switch (dataType) {

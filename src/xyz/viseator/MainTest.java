@@ -15,7 +15,7 @@ public class MainTest {
         final int pic = 4;
         final String PATH = "C:/Users/visea/Desktop/test/" +
                 String.valueOf(pic) + ".jpg";
-        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR");
+        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR","./dic.txt");
         ocr.execute(PATH, pic);
     }
 

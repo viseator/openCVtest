@@ -23,26 +23,26 @@ public class OCR {
     private ProgressPic progressPic;
     private TableInfo tableInfo;
 
-    public OCR(String dataPath, String language){
+    public OCR(String dataPath, String language, String dicPath){
         handlerNum = new OCRHandler();
-        handlerNum.init(dataPath, "eng", OCRHandler.FILTER_NUM);
+        handlerNum.init(dataPath, dicPath, "eng", OCRHandler.FILTER_NUM);
         handlerChi = new OCRHandler();
-        handlerChi.init(dataPath, language, OCRHandler.FILTER_CHI);
+        handlerChi.init(dataPath, dicPath, language, OCRHandler.FILTER_CHI);
         progressPic = new ProgressPic();
     }
 
-    public OCR(String dataPath){
-        this(dataPath, "chi_sim");
+    public OCR(String dataPath, String dicPath){
+        this(dataPath, "chi_sim", dicPath);
     }
 
     public void execute(String picPath, int numOfPic){
         tableInfo = progressPic.progress(picPath, numOfPic);
-        for (int row = 0; row < tableInfo.getRowsSize(); row++) {
+        for (int cols = 0; cols < tableInfo.getRowsSize(); cols++) {
             StringBuffer resultOfColBuffer = new StringBuffer();
-            for (int character = 0; character < tableInfo.getRows(row).getChaSize(); character++) {
+            for (int character = 0; character < tableInfo.getRows(cols).getChaSize(); character++) {
                 BufferedImage image;
-                image = tableInfo.getRows(row).getBufferedImage(character);
-                if(tableInfo.getRows(row).getDataType() <= 1){
+                image = tableInfo.getRows(cols).getBufferedImage(character);
+                if(tableInfo.getRows(cols).getDataType() <= 1){
                     resultOfColBuffer.append(handlerNum.getTextFromPic(image,
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
                 }else{
@@ -50,9 +50,8 @@ public class OCR {
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
                 }
             }
-            String resultOfRow = OCRHandler.handleDetail(resultOfColBuffer.toString(), tableInfo.getRows(row).getDataType() <= 1);
-            tableInfo.getRows(row).setResult(resultOfRow);
-            System.out.println(resultOfRow);
+            String resultOfCol = OCRHandler.handleDetail(resultOfColBuffer.toString(), tableInfo.getRows(cols).getDataType() <= 1);
+            System.out.println(resultOfCol);
         }
     }
 

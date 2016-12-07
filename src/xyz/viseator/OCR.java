@@ -18,12 +18,14 @@ public class OCR {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
+    private final String EXCEL_PATH = "C:/Users/visea/Desktop/test/交付表格.xlsx";
+    private final String OUTPUT_PATH = "C:/Users/visea/Desktop/test/交付表格_完成.xlsx";
     private OCRHandler handlerNum;
     private OCRHandler handlerChi;
     private ProgressPic progressPic;
     private TableInfo tableInfo;
 
-    public OCR(String dataPath, String language, String dicPath){
+    public OCR(String dataPath, String language, String dicPath) {
         handlerNum = new OCRHandler();
         handlerNum.init(dataPath, dicPath, "eng", OCRHandler.FILTER_NUM);
         handlerChi = new OCRHandler();
@@ -31,27 +33,35 @@ public class OCR {
         progressPic = new ProgressPic();
     }
 
-    public OCR(String dataPath, String dicPath){
+    public OCR(String dataPath, String dicPath) {
         this(dataPath, "chi_sim", dicPath);
     }
 
-    public void execute(String picPath, int numOfPic){
+    public void execute(String picPath, int numOfPic) {
         tableInfo = progressPic.progress(picPath, numOfPic);
-        for (int cols = 0; cols < tableInfo.getRowsSize(); cols++) {
-            StringBuffer resultOfColBuffer = new StringBuffer();
-            for (int character = 0; character < tableInfo.getRows(cols).getChaSize(); character++) {
+        for (int row = 0; row < tableInfo.getRowsSize(); row++) {
+            StringBuffer resultOfRowBuffer = new StringBuffer();
+            for (int character = 0; character < tableInfo.getRows(row).getChaSize(); character++) {
                 BufferedImage image;
-                image = tableInfo.getRows(cols).getBufferedImage(character);
-                if(tableInfo.getRows(cols).getDataType() <= 1){
-                    resultOfColBuffer.append(handlerNum.getTextFromPic(image,
+                image = tableInfo.getRows(row).getBufferedImage(character);
+                if (tableInfo.getRows(row).getDataType() <= 1) {
+                    resultOfRowBuffer.append(handlerNum.getTextFromPic(image,
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
-                }else{
-                    resultOfColBuffer.append(handlerChi.getTextFromPic(image,
+                } else {
+                    resultOfRowBuffer.append(handlerChi.getTextFromPic(image,
                             ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
                 }
             }
-            String resultOfCol = OCRHandler.handleDetail(resultOfColBuffer.toString(), tableInfo.getRows(cols).getDataType() <= 1);
-            System.out.println(resultOfCol);
+            String resultOfRow = OCRHandler.handleDetail(
+                    resultOfRowBuffer.toString(), tableInfo.getRows(row).getDataType() <= 1);
+            tableInfo.getRows(row).setResult(resultOfRow);
+        }
+
+        OutputExcel outputExcel = new OutputExcel(EXCEL_PATH, OUTPUT_PATH);
+        outputExcel.storeResultToExcel(tableInfo, 0);
+
+        for (int i = 0; i < tableInfo.getRowsSize(); i++) {
+            System.out.println(tableInfo.getRows(i).getResult());
         }
     }
 

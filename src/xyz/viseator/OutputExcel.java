@@ -17,7 +17,7 @@ public class OutputExcel {
         this.outputPath = outputPath;
     }
 
-    public void storeResultToExcel(TableInfo tableInfo, int tableNum) {
+    public void storeResultToExcel(TableInfo tableInfo) {
         Workbook workbook = getWorkBookFromPath();
         Sheet sheet = workbook.getSheetAt(0);
 

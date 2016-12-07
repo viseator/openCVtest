@@ -23,6 +23,7 @@ public class OCR {
     private ProgressPic progressPic;
     private TableInfo tableInfo;
     private String excelPath;
+    private String outExcelPath;
 
     public OCR(String dataPath, String language, String dicPath) {
         handlerNum = new OCRHandler();
@@ -56,8 +57,15 @@ public class OCR {
             tableInfo.getRows(row).setResult(resultOfRow);
         }
 
-        OutputExcel outputExcel = new OutputExcel(excelPath,excelPath);
-        outputExcel.storeResultToExcel(tableInfo, 0);
+        File file = new File(outExcelPath);
+        OutputExcel outputExcel;
+        if (file.exists()) {
+            outputExcel = new OutputExcel(outExcelPath, outExcelPath);
+        } else {
+            outputExcel = new OutputExcel(excelPath, outExcelPath);
+        }
+
+        outputExcel.storeResultToExcel(tableInfo);
 
         for (int i = 0; i < tableInfo.getRowsSize(); i++) {
             System.out.println(tableInfo.getRows(i).getResult());
@@ -66,5 +74,9 @@ public class OCR {
 
     public void setExcelPath(String excelPath) {
         this.excelPath = excelPath;
+    }
+
+    public void setOutExcelPath(String outExcelPath) {
+        this.outExcelPath = outExcelPath;
     }
 }

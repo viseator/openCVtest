@@ -18,12 +18,11 @@ public class OCR {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
-    private final String EXCEL_PATH = "C:/Users/visea/Desktop/test/交付表格.xlsx";
-    private final String OUTPUT_PATH = "C:/Users/visea/Desktop/test/交付表格_完成.xlsx";
     private OCRHandler handlerNum;
     private OCRHandler handlerChi;
     private ProgressPic progressPic;
     private TableInfo tableInfo;
+    private String excelPath;
 
     public OCR(String dataPath, String language, String dicPath) {
         handlerNum = new OCRHandler();
@@ -57,7 +56,7 @@ public class OCR {
             tableInfo.getRows(row).setResult(resultOfRow);
         }
 
-        OutputExcel outputExcel = new OutputExcel(EXCEL_PATH, EXCEL_PATH);
+        OutputExcel outputExcel = new OutputExcel(excelPath,excelPath);
         outputExcel.storeResultToExcel(tableInfo, 0);
 
         for (int i = 0; i < tableInfo.getRowsSize(); i++) {
@@ -65,4 +64,7 @@ public class OCR {
         }
     }
 
+    public void setExcelPath(String excelPath) {
+        this.excelPath = excelPath;
+    }
 }

@@ -57,7 +57,7 @@ public class OCR {
             tableInfo.getRows(row).setResult(resultOfRow);
         }
 
-        OutputExcel outputExcel = new OutputExcel(EXCEL_PATH, OUTPUT_PATH);
+        OutputExcel outputExcel = new OutputExcel(EXCEL_PATH, EXCEL_PATH);
         outputExcel.storeResultToExcel(tableInfo, 0);
 
         for (int i = 0; i < tableInfo.getRowsSize(); i++) {

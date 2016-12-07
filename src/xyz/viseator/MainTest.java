@@ -12,7 +12,7 @@ public class MainTest {
     }
 
     public static void main(String args[]) {
-        final int pic = 1;
+        final int pic = 4;
         final String PATH = "C:/Users/visea/Desktop/test/" +
                 String.valueOf(pic) + ".jpg";
         final String EXCEL_PATH = "C:/Users/visea/Desktop/test/交付表格.xlsx";

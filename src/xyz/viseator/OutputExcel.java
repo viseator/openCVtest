@@ -24,8 +24,6 @@ public class OutputExcel {
         for (int position = 0; position < tableInfo.getRowsSize(); position++) {
             int[] positionInExcel = tableInfo.getRows(position).getPositionInExcel();
             if (positionInExcel[0] != -1) {
-                System.out.println(positionInExcel[0]);
-                System.out.println(positionInExcel[1]);
                 Row row = sheet.getRow(positionInExcel[0]);
                 Cell cell = row.getCell(positionInExcel[1]);
                 cell.setCellValue(tableInfo.getRows(position).getResult());

@@ -273,7 +273,7 @@ public class CutPic {
 
         getBorders(emptyCols, uniqueEmptyCols, 5, 0);
 
-        showLines(srcMat,uniqueEmptyCols,true);
+        showLines(srcMat, uniqueEmptyCols, true);
         //cut the image according to the left and right borders
         for (int i = 1; i < uniqueEmptyCols.size() - 1; i += 2) {
             Mat cutMat = new Mat();
@@ -286,12 +286,27 @@ public class CutPic {
                         uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
                                 uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 60
                         ) {
-                    //jump to the next right border
-                    cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                            0,
-                            (int) (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i)),
-                            srcMat.height()));
-                    i += 2;
+                    if (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
+                            uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 30 &&
+                            i < uniqueEmptyCols.size() - 5 &&
+                            uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i + 4) -
+                                    uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
+                                    uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 60) {
+                        //jump to the next next right border
+                        cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
+                                0,
+                                (int) (uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i)),
+                                srcMat.height()));
+                        i += 4;
+
+                    } else {
+                        //jump to the next right border
+                        cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
+                                0,
+                                (int) (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i)),
+                                srcMat.height()));
+                        i += 2;
+                    }
                 } else {
                     cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
                             0,

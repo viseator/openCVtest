@@ -283,15 +283,12 @@ public class CutPic {
                  *  border < character's size + 5, consider it as a single character be separated to two part
                  */
                 if (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 30 &&
-                        uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
-                                uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 60
+                        uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
                         ) {
                     if (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
                             uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 30 &&
                             i < uniqueEmptyCols.size() - 5 &&
-                            uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i + 4) -
-                                    uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
-                                    uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 60) {
+                            uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i) < 50) {
                         //jump to the next next right border
                         cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
                                 0,

@@ -1,42 +1,58 @@
 package xyz.viseator;
 
-import org.apache.poi.hssf.util.CellReference;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Map;
+import java.io.*;
 
 /**
  * Created by viseator on 2016/12/1.
  */
 public class OutputExcel {
-    private ArrayList<Map<Integer, String>> dataMapList;
-    private static final String PATH = "C:/Users/visea/Desktop/test/交付表格.xlsx";
+    private String excelPath;
+    private String outputPath;
 
-    public OutputExcel(ArrayList<Map<Integer, String>> dataMapList) {
-        this.dataMapList = dataMapList;
+    public OutputExcel(String excelPath, String outputPath) {
+        this.excelPath = excelPath;
+        this.outputPath = outputPath;
     }
 
-    public void execute() {
-        InputStream inputStream = null;
+    public void storeResultToExcel(TableInfo tableInfo) {
+        Workbook workbook = getWorkBookFromPath();
+        Sheet sheet = workbook.getSheetAt(0);
+
+        for (int position = 0; position < tableInfo.getRowsSize(); position++) {
+            int[] positionInExcel = tableInfo.getRows(position).getPositionInExcel();
+            if (positionInExcel[0] != -1) {
+                Row row = sheet.getRow(positionInExcel[0]);
+                Cell cell = row.getCell(positionInExcel[1]);
+                cell.setCellValue(tableInfo.getRows(position).getResult());
+            }
+        }
+        outPutWorkBookToPath(workbook);
+    }
+
+    private Workbook getWorkBookFromPath() {
+        InputStream inputStream;
         Workbook workbook = null;
         try {
-            inputStream = new FileInputStream(PATH);
-            workbook = WorkbookFactory.create(inputStream);
-        } catch (InvalidFormatException | IOException e) {
+            inputStream = new FileInputStream(excelPath);
+            workbook = new XSSFWorkbook(inputStream);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        Sheet sheet = workbook.getSheetAt(0);
-        Row row = sheet.getRow(1);
-        Cell cell = row.getCell(2   );
-        CellReference cellReference = new CellReference(row.getRowNum(), cell.getColumnIndex());
-        System.out.print(cell.getRichStringCellValue());
+        return workbook;
+    }
 
+    private void outPutWorkBookToPath(Workbook workbook) {
+        OutputStream outputStream;
+        try {
+            outputStream = new FileOutputStream(outputPath);
+            workbook.write(outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

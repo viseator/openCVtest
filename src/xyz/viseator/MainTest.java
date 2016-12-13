@@ -12,11 +12,19 @@ public class MainTest {
     }
 
     public static void main(String args[]) {
-        final int pic = 4;
-        final String PATH = "C:/Users/Lily/Desktop/test/resource/" +
-                String.valueOf(pic) + ".jpg";
-        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR","./dic.txt");
-        ocr.execute(PATH, pic);
+        for (int pic = 1; pic <= 5; pic++) {
+            final String PATH = "./image/" +
+                    String.valueOf(pic) + ".jpg";
+            final String EXCEL_PATH = "./image/交付表格.xlsx";
+            final String OUT_EXCEL_PATH = "./交付表格.xlsx";
+
+            OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt");
+            ocr.setExcelPath(EXCEL_PATH);
+            ocr.setOutExcelPath(OUT_EXCEL_PATH);
+            ocr.execute(PATH, pic);
+        }
+
+
     }
 
 }

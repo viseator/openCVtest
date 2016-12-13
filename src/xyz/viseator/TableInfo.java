@@ -8,7 +8,9 @@ import java.util.ArrayList;
  */
 public class TableInfo {
     private int rowsSize;
-    private static final double DEFAULT_FILTERGAP = 0;
+    private static final int NUMBER_OR_YINYANG = 4;
+    private static final int JIANCHASUOJIAN = 5;
+    private static final double DEFAULT_FILTERGAP = 0.019;
     public static final int DATA_TYPE_NUMBER_0_1 = 0;
     public static final int DATA_TYPE_NUMBER_1_2 = 1;
     public static final int DATA_TYPE_STRING_0_1 = 2;
@@ -23,9 +25,12 @@ public class TableInfo {
         }
     }
 
-    public void initRow(int position, int dataType) {
+    public void initRowInfo(int position, int dataType, int rowInExcel) {
         RowInfo rowInfo = rows.get(position);
         rowInfo.setFilterGap(DEFAULT_FILTERGAP);
+        int[] positionInExcel = new int[2];
+        positionInExcel[0] = rowInExcel;
+        positionInExcel[1] = NUMBER_OR_YINYANG;
         switch (dataType) {
             case DATA_TYPE_NUMBER_0_1:
                 rowInfo.setDataType(dataType);
@@ -43,6 +48,7 @@ public class TableInfo {
                 rowInfo.setBoundLeft(0);
                 rowInfo.setBorderRight(1);
                 rowInfo.setFilterGap(0.3);
+                positionInExcel[1] = JIANCHASUOJIAN;
                 break;
 
             case DATA_TYPE_STRING_1_2:
@@ -51,6 +57,7 @@ public class TableInfo {
                 rowInfo.setBorderRight(2);
                 break;
         }
+        rowInfo.setPositionInExcel(positionInExcel);
     }
 
     public int getRowsSize() {
@@ -74,6 +81,7 @@ public class TableInfo {
         private int borderRight;
         private ArrayList<BufferedImage> bufferedImages;
         private String result;
+        private int[] positionInExcel;
 
         public double getFilterGap() {
             return filterGap;
@@ -127,5 +135,12 @@ public class TableInfo {
             this.result = result;
         }
 
+        public int[] getPositionInExcel() {
+            return positionInExcel;
+        }
+
+        public void setPositionInExcel(int[] positionInExcel) {
+            this.positionInExcel = positionInExcel;
+        }
     }
 }

@@ -26,7 +26,7 @@ public class HeaderOCR {
     public String getText(ArrayList<BufferedImage> images){
         StringBuilder builder = new StringBuilder();
         for(BufferedImage image : images){
-            builder.append(handler.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
+            builder.append(handler.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR));
         }
         return builder.toString();
     }

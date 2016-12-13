@@ -1,20 +1,12 @@
 package xyz.viseator;
 
-import com.sun.istack.internal.Nullable;
 import com.sun.jna.Pointer;
-import com.sun.jna.ptr.PointerByReference;
-import net.sourceforge.lept4j.Pix;
-import net.sourceforge.lept4j.Pixa;
 import net.sourceforge.lept4j.util.LeptUtils;
 import net.sourceforge.tess4j.ITessAPI;
 import net.sourceforge.tess4j.TessAPI;
-import net.sourceforge.tess4j.util.ImageIOHelper;
 
-import javax.imageio.IIOException;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.*;
 
 /**
  * Created by Lily on 2016/12/1.

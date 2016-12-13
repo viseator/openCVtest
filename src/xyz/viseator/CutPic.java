@@ -460,8 +460,9 @@ public class CutPic {
             }
         }
     }*/
+    interface RecognizeCharacters {
+        String recognize(ArrayList<BufferedImage> bufferedImages);
+    }
 }
 
-interface RecognizeCharacters {
-    String recognize(ArrayList<BufferedImage> bufferedImages);
-}
+

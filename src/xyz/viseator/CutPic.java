@@ -4,6 +4,8 @@ import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -14,6 +16,7 @@ import static org.opencv.imgproc.Imgproc.*;
  * viseator@gmail.com
  * Created by viseator on 2016/12/12.
  */
+
 public class CutPic {
     private static final int BLOCK_SIZE = 27;
     private static final int C_THRESHOLD = 10;
@@ -43,6 +46,8 @@ public class CutPic {
     private int picId;
     private int colNum = -1; //when find a valid col:colNum++
 
+    private RecognizeCharacters ocr;
+
 
     public void progress(String path, int picId) {
         srcPic = Imgcodecs.imread(path, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
@@ -51,6 +56,10 @@ public class CutPic {
         deNoise();
         cutImagesToRows();
         cutImagesToCols();
+    }
+
+    public void setOcr(RecognizeCharacters ocr) {
+        this.ocr = ocr;
     }
 
     /**
@@ -204,6 +213,10 @@ public class CutPic {
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , character);
         }
+
+        ArrayList<BufferedImage> bufferedImages = convertMatsToBufferedImages(characters);
+        String nameOfRow = ocr.recognize(bufferedImages);
+
     }
 
     private ArrayList<Mat> cutCharacters(Mat mat) {
@@ -255,7 +268,6 @@ public class CutPic {
      * @return list of characters
      */
     private ArrayList<Mat> cutSingleCha(Mat srcMat, int testNum) {
-
         ArrayList<Mat> characters = new ArrayList<>();
         ArrayList<Double> emptyCols = new ArrayList<>();
         ArrayList<Double> uniqueEmptyCols = new ArrayList<>();
@@ -410,6 +422,28 @@ public class CutPic {
             }
         }
     }
+
+    /**
+     * convert Mat format to bufferedImage format for OCR
+     *
+     * @param mat
+     * @return
+     */
+    private BufferedImage convertMatToBufferedImage(Mat mat) {
+        BufferedImage bufferedImage = new BufferedImage(mat.width(), mat.height(), BufferedImage.TYPE_BYTE_GRAY);
+        byte[] data = ((DataBufferByte) bufferedImage.getRaster().getDataBuffer()).getData();
+        mat.get(0, 0, data);
+        return bufferedImage;
+    }
+
+    private ArrayList<BufferedImage> convertMatsToBufferedImages(ArrayList<Mat> mats) {
+        ArrayList<BufferedImage> bufferedImages = new ArrayList<>();
+        for (Mat mat : mats) {
+            bufferedImages.add(convertMatToBufferedImage(mat));
+        }
+        return bufferedImages;
+    }
+
     /*private void testParams() {
         for (int param1 = 17; param1 < 40; param1 += 2) {
             for (int param2 = 2; param2 < 20; param2 += 1) {
@@ -423,4 +457,8 @@ public class CutPic {
             }
         }
     }*/
+}
+
+interface RecognizeCharacters {
+    String recognize(ArrayList<BufferedImage> bufferedImages);
 }

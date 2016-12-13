@@ -126,7 +126,6 @@ public class CutPic {
 
         getUniqueLines(lineYs, uniqueLineYs, 10);
 
-        System.out.println(uniqueLineYs.size());
 //        showLines(srcPic, uniqueLineYs, false);
         blockImages = new ArrayList<>();
         if (uniqueLineYs.size() == 0) blockImages.add(srcPic);
@@ -162,6 +161,7 @@ public class CutPic {
      */
     private void cutImagesToCols() {
         for (int position = 0; position < blockImages.size(); position++) {
+            RowInfo row = new RowInfo();
             Mat image = blockImages.get(position);
 
             //dilate much to find all lines
@@ -200,11 +200,12 @@ public class CutPic {
 
             //find a valid image
 //            showLines(image, uniqueLineXs, true);
-            getNameOfRow(uniqueLineXs, image);
+            row.setNameOfRow(getNameOfRow(uniqueLineXs, image));
+            System.out.println(row.getNameOfRow());
         }
     }
 
-    private void getNameOfRow(ArrayList<Double> coordinates, Mat mat) {
+    private String getNameOfRow(ArrayList<Double> coordinates, Mat mat) {
         Mat cutMat = new Mat(mat, new Rect(coordinates.get(0).intValue() + 5,
                 0,
                 (int) (coordinates.get(1) - coordinates.get(0) - 10), mat.height()));
@@ -218,8 +219,7 @@ public class CutPic {
         }
 
         ArrayList<BufferedImage> bufferedImages = convertMatsToBufferedImages(characters);
-        String nameOfRow = ocr.recognize(bufferedImages);
-
+        return ocr.recognize(bufferedImages);
     }
 
     private ArrayList<Mat> cutCharacters(Mat mat) {

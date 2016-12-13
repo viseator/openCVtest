@@ -24,10 +24,12 @@ public class OCRHandler {
 
     public static final int FILTER_NUM = 1;
     public static final int FILTER_CHI = 2;
+    public static final int FILTER_NO_SPECIAL = 3;
 
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
     private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<>/?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
+    private String specialCha1 = "`~!@#$%^&*_-+={}[]|\\:;\"'<>?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
     private static CharacterFixer fixer;
 
     public void init(String dataPath, String dicPath, String language, int filter) {
@@ -41,8 +43,10 @@ public class OCRHandler {
                 apiManager.TessBaseAPISetVariable(handler, "tessedit_char_whitelist","0123456789.");
                 break;
             case FILTER_CHI:
-                apiManager.TessBaseAPISetVariable(handler, "tessedit_char_blacklist",specialCha);
+                apiManager.TessBaseAPISetVariable(handler, "tessedit_char_blacklist", specialCha);
                 break;
+            case FILTER_NO_SPECIAL:
+                apiManager.TessBaseAPISetVariable(handler, "tessedit_char_blacklist", specialCha1);
         }
     }
 

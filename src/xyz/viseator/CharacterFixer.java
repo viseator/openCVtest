@@ -42,6 +42,7 @@ public class CharacterFixer {
             while((s = bufferedReader.readLine()) != null){
                 addWordList(s.charAt(0), s.charAt(2), s.substring(4));
             }
+            bufferedReader.close();
         }catch (IOException e){
             e.printStackTrace();
         }

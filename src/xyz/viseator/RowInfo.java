@@ -20,5 +20,62 @@ public class RowInfo {
     private String nameOfRow;
     private String result;
 
+    public int getDataType() {
+        return dataType;
+    }
 
+    public void setDataType(int dataType) {
+        this.dataType = dataType;
+        switch (dataType) {
+            case DATA_TYPE_NUMBER_0_1:
+                leftBorder = 0;
+                rightBorder = 1;
+                break;
+            case DATA_TYPE_NUMBER_1_2:
+                leftBorder = 1;
+                rightBorder = 2;
+                break;
+            case DATA_TYPE_STRING_0_1:
+                leftBorder = 0;
+                rightBorder = 1;
+                break;
+            case DATA_TYPE_STRING_1_2:
+                leftBorder = 1;
+                rightBorder = 2;
+                break;
+            default:
+        }
+    }
+
+    public int getLeftBorder() {
+        return leftBorder;
+    }
+
+    public int getRightBorder() {
+        return rightBorder;
+    }
+
+    public BufferedImage getContentImage() {
+        return contentImage;
+    }
+
+    public void setContentImage(BufferedImage contentImage) {
+        this.contentImage = contentImage;
+    }
+
+    public String getNameOfRow() {
+        return nameOfRow;
+    }
+
+    public void setNameOfRow(String nameOfRow) {
+        this.nameOfRow = nameOfRow;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
 }

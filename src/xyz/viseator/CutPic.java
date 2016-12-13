@@ -40,6 +40,7 @@ public class CutPic {
     private static final double IMAGE_WIDTH = 2592.0;
 
     private ArrayList<Mat> blockImages; //Store rows
+    private ArrayList<RowInfo> rows;
 
     private Mat srcPic;
     private Mat dilateMuchPic;
@@ -47,6 +48,8 @@ public class CutPic {
     private int colNum = -1; //when find a valid col:colNum++
 
     private RecognizeCharacters ocr;
+
+
 
 
     public void progress(String path, int picId) {

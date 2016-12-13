@@ -16,7 +16,7 @@ public class HeaderOCR {
 
     public HeaderOCR(String dataPath, String language, String dicPath) {
         handler = new OCRHandler();
-        handler.init(dataPath, dicPath, language, OCRHandler.FILTER_CHI);
+        handler.init(dataPath, dicPath, language, OCRHandler.FILTER_NO_SPECIAL);
     }
 
     public HeaderOCR(String dataPath, String dicPath){

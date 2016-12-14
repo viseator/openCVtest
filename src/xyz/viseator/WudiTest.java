@@ -10,22 +10,24 @@ import java.util.ArrayList;
  * viseator@gmail.com
  * Created by viseator on 2016/12/12.
  */
-public class WudiTest{
+public class WudiTest {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
 
     public static void main(String args[]) {
-        HeaderOCR headerOCR = new HeaderOCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt");
-        for (int picId = 1; picId <= 37; picId++) {
-            CutPic cutPic = new CutPic();
-            cutPic.setOcr(new CutPic.RecognizeCharacters() {
-                @Override
-                public String recognize(ArrayList<BufferedImage> bufferedImages) {
-                    return headerOCR.getText(bufferedImages);
-                }
-            });
-            cutPic.progress("./image/1 (" + String.valueOf(picId) + ").jpg", picId);
-        }
+//        CutPic cutPic = new CutPic();
+//        HeaderOCR headerOCR = new HeaderOCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt");
+//        cutPic.setOcr(new RecognizeCharacters() {
+//            @Override
+//            public String recognize(ArrayList<BufferedImage> bufferedImages) {
+//                return headerOCR.getText(bufferedImages);
+//            }
+//        });
+//        for (int picId = 1; picId <= 37; picId++) {
+//            cutPic.progress("./image/1 (" + String.valueOf(picId) + ").jpg", picId);
+//        }
+        IndexReader indexReader = new IndexReader("./index.txt");
+        System.out.println(indexReader.getRowInfo("舒张压").getLeftBorder() + " " + indexReader.getRowInfo("舒张压").getRightBorder());
     }
 }

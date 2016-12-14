@@ -8,11 +8,9 @@ import java.awt.image.BufferedImage;
  * Created by viseator on 2016/12/13.
  */
 public class RowInfo {
-    public static final int DATA_TYPE_NUMBER_1_2 = 0;
-    public static final int DATA_TYPE_NUMBER_2_3 = 1;
-    public static final int DATA_TYPE_STRING_1_2 = 2;
-    public static final int DATA_TYPE_STRING_2_3 = 3;
 
+    public static final int IS_STRING = 0;
+    public static final int IS_NUM = 1;
 
     private int dataType;
     private int leftBorder;
@@ -21,31 +19,21 @@ public class RowInfo {
     private String nameOfRow;
     private String result;
 
+    public RowInfo(){}
+
+    public RowInfo(int dataType, int position, String name){
+        setDataType(dataType, position);
+        setNameOfRow(name);
+    }
+
     public int getDataType() {
         return dataType;
     }
 
-    public void setDataType(int dataType) {
+    public void setDataType(int dataType, int position) {
         this.dataType = dataType;
-        switch (dataType) {
-            case DATA_TYPE_NUMBER_2_3:
-                leftBorder = 2;
-                rightBorder = 3;
-                break;
-            case DATA_TYPE_NUMBER_1_2:
-                leftBorder = 1;
-                rightBorder = 2;
-                break;
-            case DATA_TYPE_STRING_2_3:
-                leftBorder = 2;
-                rightBorder = 3;
-                break;
-            case DATA_TYPE_STRING_1_2:
-                leftBorder = 1;
-                rightBorder = 2;
-                break;
-            default:
-        }
+        this.leftBorder = position;
+        this.rightBorder = position + 1;
     }
 
     public int getLeftBorder() {

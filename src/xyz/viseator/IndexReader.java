@@ -13,27 +13,28 @@ public class IndexReader {
     private Map<String, RowInfo> indexMap;
     private File index;
 
-    public IndexReader(String path){
+    public IndexReader(String path) {
         indexMap = new HashMap<>();
         index = new File(path);
         initialIndexMap();
     }
 
-    public RowInfo getRowInfo(String name){
+    public RowInfo getRowInfo(String name) {
+        if (indexMap.get(name) == null) System.out.println("Error: " + name);
         return indexMap.get(name);
     }
 
-    private void initialIndexMap(){
+    private void initialIndexMap() {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(index), "UNICODE"));
             String s;
-            while((s = bufferedReader.readLine()) != null){
+            while ((s = bufferedReader.readLine()) != null) {
                 int count = 0;
                 StringBuffer nameBuf;
                 Character pos;
                 Character type;
                 nameBuf = new StringBuffer();
-                for(; s.charAt(count) != ' '; count++){
+                for (; s.charAt(count) != ' '; count++) {
                     nameBuf.append(s.charAt(count));
                 }
                 pos = s.charAt(count + 1);
@@ -42,7 +43,7 @@ public class IndexReader {
                         (pos - '0'), nameBuf.toString()));
             }
             bufferedReader.close();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

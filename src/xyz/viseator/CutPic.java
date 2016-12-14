@@ -48,13 +48,15 @@ public class CutPic {
     private int colNum = -1; //when find a valid col:colNum++
 
     private RecognizeCharacters ocr;
-
-
+    private IndexReader indexReader;
 
 
     public void progress(String path, int picId) {
         srcPic = Imgcodecs.imread(path, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
         this.picId = picId;
+
+        indexReader = new IndexReader("./index.txt");
+        rows = new ArrayList<>();
         binarization();
         deNoise();
         cutImagesToRows();
@@ -161,7 +163,6 @@ public class CutPic {
      */
     private void cutImagesToCols() {
         for (int position = 0; position < blockImages.size(); position++) {
-            RowInfo row = new RowInfo();
             Mat image = blockImages.get(position);
 
             //dilate much to find all lines
@@ -200,8 +201,10 @@ public class CutPic {
 
             //find a valid image
 //            showLines(image, uniqueLineXs, true);
-            row.setNameOfRow(getNameOfRow(uniqueLineXs, image));
-            System.out.println(row.getNameOfRow());
+            rows.add(indexReader.getRowInfo(getNameOfRow(uniqueLineXs, image)));
+        }
+        for (RowInfo rowInfo : rows) {
+            System.out.println(rowInfo.getLeftBorder() + "_" + rowInfo.getRightBorder());
         }
     }
 

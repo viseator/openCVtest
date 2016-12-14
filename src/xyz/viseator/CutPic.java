@@ -201,12 +201,21 @@ public class CutPic {
 
             //find a valid image
 //            showLines(image, uniqueLineXs, true);
-            rows.add(indexReader.getRowInfo(getNameOfRow(uniqueLineXs, image)));
+            String nameOfRow = getNameOfRow(uniqueLineXs, image);
+            RowInfo rowInfo = indexReader.getRowInfo(nameOfRow);
+            rowInfo.setNameOfRow(nameOfRow);
+            rowInfo.setContentImage(image);
+            rows.add(rowInfo);
         }
         for (RowInfo rowInfo : rows) {
             System.out.println(rowInfo.getLeftBorder() + "_" + rowInfo.getRightBorder());
         }
     }
+
+    private void getContentOfRow() {
+
+    }
+
 
     private String getNameOfRow(ArrayList<Double> coordinates, Mat mat) {
         Mat cutMat = new Mat(mat, new Rect(coordinates.get(0).intValue() + 5,

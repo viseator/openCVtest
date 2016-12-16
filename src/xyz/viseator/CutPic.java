@@ -202,7 +202,7 @@ public class CutPic {
 //            }
 
             //find a valid image
-            showLines(image, uniqueLineXs, true);
+//            showLines(image, uniqueLineXs, true);
             String nameOfRow = getNameOfRow(uniqueLineXs, image);
             RowInfo rowInfo = indexReader.getRowInfo(nameOfRow);
 
@@ -282,7 +282,7 @@ public class CutPic {
                     count++;
                 }
             }
-            if (count < 3) emptyRows.add((double) row);
+            if (count < 2) emptyRows.add((double) row);
         }
 
         getUniqueLines(emptyRows, uniqueEmptyRows, 10);
@@ -336,9 +336,9 @@ public class CutPic {
             if (count < 3) emptyCols.add((double) col);
         }
 
-        getBorders(emptyCols, uniqueEmptyCols, 5, 0);
+        getBorders(emptyCols, uniqueEmptyCols, 5, 2);
 
-//        showLines(srcMat, uniqueEmptyCols, true);
+        showLines(srcMat, uniqueEmptyCols, true);
         //cut the image according to the left and right borders
         for (int i = 1; i < uniqueEmptyCols.size() - 1; i += 2) {
             Mat cutMat = new Mat();
@@ -347,11 +347,12 @@ public class CutPic {
                  *    if the right border - the left border < character's size - 10, and the next right border - this left
                  *  border < character's size + 5, consider it as a single character be separated to two part
                  */
+                //fixme: Params
                 if (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
                         uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
                         ) {
                     if (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
-                            uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 30 &&
+                            uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
                             i < uniqueEmptyCols.size() - 5 &&
                             uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i) < 50) {
                         //jump to the next next right border

@@ -241,7 +241,7 @@ public class CutPic {
             Mat contentImage = rowInfo.getContentImage();
             ArrayList<Mat> characters = cutCharacters(contentImage, rowInfo.getDataType());
             for (Mat character : characters) {
-                    Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/content/" +
+                Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/content/" +
                                 String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                         , character);
             }
@@ -336,52 +336,33 @@ public class CutPic {
             if (count < 3) emptyCols.add((double) col);
         }
 
-        getBorders(emptyCols, uniqueEmptyCols, 5, 2);
+        getBorders(emptyCols, uniqueEmptyCols, 5, 0);
 
         showLines(srcMat, uniqueEmptyCols, true);
         //cut the image according to the left and right borders
         for (int i = 1; i < uniqueEmptyCols.size() - 1; i += 2) {
-            Mat cutMat = new Mat();
-            if (i < uniqueEmptyCols.size() - 3) {
-                /**
-                 *    if the right border - the left border < character's size - 10, and the next right border - this left
-                 *  border < character's size + 5, consider it as a single character be separated to two part
-                 */
-                //fixme: Params
-                if (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
-                        uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
-                        ) {
-                    if (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
-                            uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
-                            i < uniqueEmptyCols.size() - 5 &&
-                            uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i) < 50) {
-                        //jump to the next next right border
-                        cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                                0,
-                                (int) (uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i)),
-                                srcMat.height()));
-                        i += 4;
+            Mat cutMat;
 
-                    } else {
-                        //jump to the next right border
-                        cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                                0,
-                                (int) (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i)),
-                                srcMat.height()));
-                        i += 2;
-                    }
-                } else {
-                    cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                            0,
-                            (int) (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i)),
-                            srcMat.height()));
-                }
-            } else if (i != uniqueEmptyCols.size() - 1) {
-                cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                        0,
-                        (int) (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i)),
-                        srcMat.height()));
+            double chaWidth = 0;
+            int iStart = i;
+            int iEnd = i + 1;
+            while (i < uniqueEmptyCols.size() - 3 &&
+                    chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
+                    uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
+                    ) {
+                chaWidth += uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i);
+                i += 2;
+                iEnd = i + 1;
             }
+
+
+            cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(iStart).intValue(),
+                    0,
+                    (int) (uniqueEmptyCols.get(iEnd) - uniqueEmptyCols.get(iStart)),
+                    srcMat.height()));
+            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/cutSingleCha/" +
+                            String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                    , cutMat);
             characters.add(cutMat);
         }
         return characters;

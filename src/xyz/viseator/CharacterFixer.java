@@ -57,27 +57,29 @@ public class CharacterFixer {
         wordsList.put(aim, lists);
     }
 
-    private String getRightIndex(Set<String> indexes, String index){
-        int lastDis = 0;
+    public static String getRightIndex(Set<String> indexes, String index){
+        int lastDis = Integer.MAX_VALUE;
         String result = null;
         for(String s : indexes){
-            int dis[][] = new int[index.length()][s.length()];
+            if(s.length() != index.length())
+                continue;
+            int dis[][] = new int[index.length() + 1][s.length() + 1];
             int cost;
-            for(int i = 0; i < index.length(); i++)
+            for(int i = 0; i <= index.length(); i++)
                 dis[i][0] = i;
-            for(int j = 0; j < s.length(); j++)
+            for(int j = 0; j <= s.length(); j++)
                 dis[0][j] = j;
-            for(int i = 0; i < index.length(); i++){
-                for(int j = 0; j < s.length(); j++){
-                    if(index.charAt(i) == s.charAt(j))
+            for(int i = 1; i <= index.length(); i++){
+                for(int j = 1; j <= s.length(); j++){
+                    if(index.charAt(i - 1) == s.charAt(j - 1))
                         cost = 0;
                     else
                         cost = 1;
-                    dis[i][j] = Math.min(dis[i - 1][j] + 1, Math.min(dis[i][j - 1] + 1, dis[i - 1][j - 1]));
+                    dis[i][j] = Math.min(dis[i - 1][j] + 1, Math.min(dis[i][j - 1] + 1, dis[i - 1][j - 1] + cost));
                 }
             }
-            if(lastDis > dis[index.length() - 1][s.length() - 1]){
-                lastDis = dis[index.length() - 1][s.length() - 1];
+            if(lastDis > dis[index.length()][s.length()]){
+                lastDis = dis[index.length()][s.length()];
                 result = s;
             }
         }

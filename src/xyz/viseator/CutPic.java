@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 import static org.opencv.imgproc.Imgproc.*;
 
@@ -76,6 +77,14 @@ public class CutPic {
         //blockSize and C are the best parameters for table
         Imgproc.adaptiveThreshold(srcPic, srcPic, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY_INV, BLOCK_SIZE, C_THRESHOLD);
         Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/binarization/" + String.valueOf(picId) + ".jpg", srcPic);
+    }
+
+    /**
+     * get the indexes in index.txt to get the right answer
+     * @return Set<String> indexes
+     */
+    public Set<String> getIndexes(){
+        return indexReader.getName();
     }
 
     /**

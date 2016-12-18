@@ -21,12 +21,13 @@ public class WudiTest {
         cutPic.setOcr(new CutPic.RecognizeCharacters() {
             @Override
             public String recognize(ArrayList<BufferedImage> bufferedImages) {
-                return headerOCR.getText(bufferedImages);
+                return CharacterFixer.getRightIndex(cutPic.getIndexes(), headerOCR.getText(bufferedImages));
             }
         });
         for (int picId = 1; picId <= 37; picId++) {
             cutPic.progress("./image/1 (" + String.valueOf(picId) + ").jpg", picId);
         }
+
 //        IndexReader indexReader = new IndexReader("./index.txt");
 //        System.out.println(indexReader.getRowInfo("舒张压").getLeftBorder() + " " + indexReader.getRowInfo("舒张压").getRightBorder());
     }

@@ -1,5 +1,7 @@
 package xyz.viseator;
 
+import org.opencv.core.Mat;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -15,7 +17,7 @@ public class RowInfo {
     private int dataType;
     private int leftBorder;
     private int rightBorder;
-    private BufferedImage contentImage;
+    private Mat contentImage;
     private String nameOfRow;
     private String result;
 
@@ -44,11 +46,11 @@ public class RowInfo {
         return rightBorder;
     }
 
-    public BufferedImage getContentImage() {
+    public Mat getContentImage() {
         return contentImage;
     }
 
-    public void setContentImage(BufferedImage contentImage) {
+    public void setContentImage(Mat contentImage) {
         this.contentImage = contentImage;
     }
 

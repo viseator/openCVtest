@@ -1,5 +1,6 @@
 package xyz.viseator;
 
+import com.lowagie.text.Row;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -48,17 +49,20 @@ public class CutPic {
     private int colNum = -1; //when find a valid col:colNum++
 
     private RecognizeCharacters ocr;
-
-
+    private IndexReader indexReader;
 
 
     public void progress(String path, int picId) {
         srcPic = Imgcodecs.imread(path, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
         this.picId = picId;
+
+        indexReader = new IndexReader("./index.txt");
+        rows = new ArrayList<>();
         binarization();
         deNoise();
         cutImagesToRows();
         cutImagesToCols();
+        getContentOfRow();
     }
 
     public void setOcr(RecognizeCharacters ocr) {
@@ -161,7 +165,6 @@ public class CutPic {
      */
     private void cutImagesToCols() {
         for (int position = 0; position < blockImages.size(); position++) {
-            RowInfo row = new RowInfo();
             Mat image = blockImages.get(position);
 
             //dilate much to find all lines
@@ -200,17 +203,58 @@ public class CutPic {
 
             //find a valid image
 //            showLines(image, uniqueLineXs, true);
-            row.setNameOfRow(getNameOfRow(uniqueLineXs, image));
-            System.out.println(row.getNameOfRow());
+            String nameOfRow = getNameOfRow(uniqueLineXs, image);
+            RowInfo rowInfo = indexReader.getRowInfo(nameOfRow);
+
+            int leftBorder = rowInfo.getLeftBorder();
+            int rightBorder = rowInfo.getRightBorder();
+
+            Rect rect;
+
+            if (uniqueLineXs.size() > rightBorder) {
+                rect = new Rect(uniqueLineXs.get(leftBorder).intValue() + 5,
+                        0,
+                        (int) (uniqueLineXs.get(rightBorder) - uniqueLineXs.get(leftBorder) - 10), image.height());
+            } else {
+                rect = new Rect(uniqueLineXs.get(leftBorder).intValue() + 5,
+                        0,
+                        (int) (image.width() - uniqueLineXs.get(leftBorder) - 10), image.height());
+            }
+            Mat contentImage = new Mat(image, rect);
+            rowInfo.setContentImage(contentImage);
+
+            rows.add(rowInfo);
+        }
+        for (RowInfo rowInfo : rows) {
+            if (rowInfo != null) {
+                Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/contentImages/" +
+                                String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                        , rowInfo.getContentImage());
+                System.out.println(rowInfo.getLeftBorder() + "_" + rowInfo.getRightBorder());
+            }
         }
     }
+
+
+    private void getContentOfRow() {
+        for (RowInfo rowInfo : rows) {
+            Mat contentImage = rowInfo.getContentImage();
+            ArrayList<Mat> characters = cutCharacters(contentImage, rowInfo.getDataType());
+            for (Mat character : characters) {
+                Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/content/" +
+                                String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                        , character);
+            }
+        }
+    }
+
 
     private String getNameOfRow(ArrayList<Double> coordinates, Mat mat) {
         Mat cutMat = new Mat(mat, new Rect(coordinates.get(0).intValue() + 5,
                 0,
                 (int) (coordinates.get(1) - coordinates.get(0) - 10), mat.height()));
 
-        ArrayList<Mat> characters = cutCharacters(cutMat);
+        ArrayList<Mat> characters = cutCharacters(cutMat, RowInfo.IS_STRING);
 
         for (Mat character : characters) {
             Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/nameOfRow/" +
@@ -222,7 +266,7 @@ public class CutPic {
         return ocr.recognize(bufferedImages);
     }
 
-    private ArrayList<Mat> cutCharacters(Mat mat) {
+    private ArrayList<Mat> cutCharacters(Mat mat, int dataType) {
         ArrayList<ArrayList<Mat>> singleLines = new ArrayList<>();
         //store the y-coordinates of empty rows (which has few white pixel)
         ArrayList<Double> emptyRows = new ArrayList<>();
@@ -238,7 +282,7 @@ public class CutPic {
                     count++;
                 }
             }
-            if (count < 3) emptyRows.add((double) row);
+            if (count < 2) emptyRows.add((double) row);
         }
 
         getUniqueLines(emptyRows, uniqueEmptyRows, 10);
@@ -249,7 +293,13 @@ public class CutPic {
                         (uniqueEmptyRows.get(i).intValue()),
                         mat.width(),
                         (((int) (uniqueEmptyRows.get(i + 1) - uniqueEmptyRows.get(i))))));
-                singleLines.add(cutSingleCha(cutMat, i));
+                if (dataType == RowInfo.IS_STRING)
+                    singleLines.add(cutSingleCha(cutMat, i));
+                else {
+                    ArrayList<Mat> line = new ArrayList<>();
+                    line.add(cutMat);
+                    singleLines.add(line);
+                }
             }
         }
 
@@ -291,46 +341,28 @@ public class CutPic {
         showLines(srcMat, uniqueEmptyCols, true);
         //cut the image according to the left and right borders
         for (int i = 1; i < uniqueEmptyCols.size() - 1; i += 2) {
-            Mat cutMat = new Mat();
-            if (i < uniqueEmptyCols.size() - 3) {
-                /**
-                 *    if the right border - the left border < character's size - 10, and the next right border - this left
-                 *  border < character's size + 5, consider it as a single character be separated to two part
-                 */
-                if (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 30 &&
-                        uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
-                        ) {
-                    if (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i + 2) +
-                            uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 30 &&
-                            i < uniqueEmptyCols.size() - 5 &&
-                            uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i) < 50) {
-                        //jump to the next next right border
-                        cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                                0,
-                                (int) (uniqueEmptyCols.get(i + 5) - uniqueEmptyCols.get(i)),
-                                srcMat.height()));
-                        i += 4;
+            Mat cutMat;
 
-                    } else {
-                        //jump to the next right border
-                        cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                                0,
-                                (int) (uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i)),
-                                srcMat.height()));
-                        i += 2;
-                    }
-                } else {
-                    cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                            0,
-                            (int) (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i)),
-                            srcMat.height()));
-                }
-            } else if (i != uniqueEmptyCols.size() - 1) {
-                cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(i).intValue(),
-                        0,
-                        (int) (uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i)),
-                        srcMat.height()));
+            double chaWidth = 0;
+            int iStart = i;
+            int iEnd = i + 1;
+            while (i < uniqueEmptyCols.size() - 3 &&
+                    chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
+                    uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
+                    ) {
+                chaWidth += uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i);
+                i += 2;
+                iEnd = i + 1;
             }
+
+
+            cutMat = new Mat(srcMat, new Rect(uniqueEmptyCols.get(iStart).intValue(),
+                    0,
+                    (int) (uniqueEmptyCols.get(iEnd) - uniqueEmptyCols.get(iStart)),
+                    srcMat.height()));
+            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/cutSingleCha/" +
+                            String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                    , cutMat);
             characters.add(cutMat);
         }
         return characters;
@@ -392,7 +424,7 @@ public class CutPic {
                 pt1 = new Point(0, coordinate);
                 pt2 = new Point(srcPic.width(), coordinate);
             }
-            Imgproc.line(rgbMat, pt1, pt2, new Scalar(0, 0, 255), 1);
+            Imgproc.line(rgbMat, pt1, pt2, new Scalar(0, 0, 255), 2);
         }
         Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/showLines/" +
                         String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
@@ -460,8 +492,9 @@ public class CutPic {
             }
         }
     }*/
+    interface RecognizeCharacters {
+        String recognize(ArrayList<BufferedImage> bufferedImages);
+    }
 }
 
-interface RecognizeCharacters {
-    String recognize(ArrayList<BufferedImage> bufferedImages);
-}
+

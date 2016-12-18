@@ -3,6 +3,7 @@ package xyz.viseator;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Lily on 2016/12/13.
@@ -21,6 +22,10 @@ public class IndexReader {
 
     public RowInfo getRowInfo(String name){
         return indexMap.get(name);
+    }
+
+    public Set<String> getName(){
+        return indexMap.keySet();
     }
 
     private void initialIndexMap(){

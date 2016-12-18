@@ -56,4 +56,32 @@ public class CharacterFixer {
         lists.add(conditions);
         wordsList.put(aim, lists);
     }
+
+    private String getRightIndex(Set<String> indexes, String index){
+        int lastDis = 0;
+        String result = null;
+        for(String s : indexes){
+            int dis[][] = new int[index.length()][s.length()];
+            int cost;
+            for(int i = 0; i < index.length(); i++)
+                dis[i][0] = i;
+            for(int j = 0; j < s.length(); j++)
+                dis[0][j] = j;
+            for(int i = 0; i < index.length(); i++){
+                for(int j = 0; j < s.length(); j++){
+                    if(index.charAt(i) == s.charAt(j))
+                        cost = 0;
+                    else
+                        cost = 1;
+                    dis[i][j] = Math.min(dis[i - 1][j] + 1, Math.min(dis[i][j - 1] + 1, dis[i - 1][j - 1]));
+                }
+            }
+            if(lastDis > dis[index.length() - 1][s.length() - 1]){
+                lastDis = dis[index.length() - 1][s.length() - 1];
+                result = s;
+            }
+        }
+        return result;
+    }
+
 }

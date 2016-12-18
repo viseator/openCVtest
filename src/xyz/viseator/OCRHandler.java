@@ -20,8 +20,8 @@ public class OCRHandler {
 
     private ITessAPI.TessBaseAPI handler;
     private TessAPI apiManager;
-    private String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<>/?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
-    private String specialCha1 = "`~!川@#$%^&*_-+={}[]|\\:;\"'<>?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
+    public static String specialCha = "`~!@#$%^&*()_-+={}[]|\\:;\"'<>/?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
+    public static String specialCha1 = "`~!川@#$%^&*_-+={}[]|\\:;\"'<>?丨﹔.︰﹕˙·～‥‧′〃〝〞‵‘’『』「」“”…❞❝﹁﹂﹃﹄″〔〕【】﹝﹞〈〉﹙﹚《》｛｝﹛﹜︵︶︷︸︹︺︻︼︽︾︿﹀＜＞∩∪ˇ丶";
     private static CharacterFixer fixer;
 
     public void init(String dataPath, String dicPath, String language, int filter) {

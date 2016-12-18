@@ -57,12 +57,12 @@ public class CharacterFixer {
         wordsList.put(aim, lists);
     }
 
-    public static String getRightIndex(Set<String> indexes, String index){
+    public static String getRightIndex(Set<String> indexes, String preIndex){
         int lastDis = Integer.MAX_VALUE;
+        String index = preHandleString(preIndex);
         String result = null;
-        for(String s : indexes){
-            if(s.length() != index.length())
-                continue;
+        for(String preS : indexes){
+            String s = preHandleString(preS);
             int dis[][] = new int[index.length() + 1][s.length() + 1];
             int cost;
             for(int i = 0; i <= index.length(); i++)
@@ -80,10 +80,20 @@ public class CharacterFixer {
             }
             if(lastDis > dis[index.length()][s.length()]){
                 lastDis = dis[index.length()][s.length()];
-                result = s;
+                result = preS;
             }
         }
         return result;
+    }
+
+    private static String preHandleString(String s){
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < s.length(); i++){
+            if(!OCRHandler.specialCha.contains(Character.toString(s.charAt(i)))){
+                builder.append(s.charAt(i));
+            }
+        }
+        return builder.toString();
     }
 
 }

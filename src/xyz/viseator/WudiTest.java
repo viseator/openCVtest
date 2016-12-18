@@ -17,11 +17,11 @@ public class WudiTest {
 
     public static void main(String args[]) {
         CutPic cutPic = new CutPic();
-        HeaderOCR headerOCR = new HeaderOCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt");
+        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt", cutPic.getIndexes());
         cutPic.setOcr(new CutPic.RecognizeCharacters() {
             @Override
             public String recognize(ArrayList<BufferedImage> bufferedImages,int dataType) {
-                return CharacterFixer.getRightIndex(cutPic.getIndexes(), headerOCR.getText(bufferedImages));
+                return ocr.execute(bufferedImages, RowInfo.IS_STRING, true);
             }
         });
         for (int picId = 1; picId <= 37; picId++) {

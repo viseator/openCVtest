@@ -52,12 +52,14 @@ public class CutPic {
     private RecognizeCharacters ocr;
     private IndexReader indexReader;
 
+    public CutPic(){
+        indexReader = new IndexReader("./index.txt");
+    }
 
     public void progress(String path, int picId) {
         srcPic = Imgcodecs.imread(path, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
         this.picId = picId;
 
-        indexReader = new IndexReader("./index.txt");
         rows = new ArrayList<>();
         binarization();
         deNoise();

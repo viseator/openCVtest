@@ -7,6 +7,7 @@ import net.sourceforge.tess4j.TessAPI;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * Created by Lily on 2016/12/1.
@@ -81,6 +82,8 @@ public class OCRHandler {
         return fixer.fixChars(output);
     }
 
-
+    public static String handleIndex(Set<String> indexes, String index){
+        return CharacterFixer.getRightIndex(indexes, index);
+    }
 
 }

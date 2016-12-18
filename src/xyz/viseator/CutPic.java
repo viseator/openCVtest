@@ -231,7 +231,6 @@ public class CutPic {
             }
             Mat contentImage = new Mat(image, rect);
             rowInfo.setContentImage(contentImage);
-
             rows.add(rowInfo);
         }
         for (RowInfo rowInfo : rows) {
@@ -249,11 +248,14 @@ public class CutPic {
         for (RowInfo rowInfo : rows) {
             Mat contentImage = rowInfo.getContentImage();
             ArrayList<Mat> characters = cutCharacters(contentImage, rowInfo.getDataType());
+
             for (Mat character : characters) {
                 Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/content/" +
                                 String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                         , character);
             }
+            rowInfo.setResult(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType()));
+            System.out.println(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType()));
         }
     }
 
@@ -271,8 +273,7 @@ public class CutPic {
                     , character);
         }
 
-        ArrayList<BufferedImage> bufferedImages = convertMatsToBufferedImages(characters);
-        return ocr.recognize(bufferedImages);
+        return ocr.recognize(convertMatsToBufferedImages(characters),RowInfo.IS_STRING);
     }
 
     private ArrayList<Mat> cutCharacters(Mat mat, int dataType) {
@@ -319,6 +320,7 @@ public class CutPic {
                 allCharacters.add(character);
             }
         }
+
         return allCharacters;
     }
 
@@ -502,7 +504,7 @@ public class CutPic {
         }
     }*/
     interface RecognizeCharacters {
-        String recognize(ArrayList<BufferedImage> bufferedImages);
+        String recognize(ArrayList<BufferedImage> bufferedImages,int dataType);
     }
 }
 

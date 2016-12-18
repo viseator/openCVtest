@@ -20,7 +20,7 @@ public class WudiTest {
         HeaderOCR headerOCR = new HeaderOCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt");
         cutPic.setOcr(new CutPic.RecognizeCharacters() {
             @Override
-            public String recognize(ArrayList<BufferedImage> bufferedImages) {
+            public String recognize(ArrayList<BufferedImage> bufferedImages,int dataType) {
                 return CharacterFixer.getRightIndex(cutPic.getIndexes(), headerOCR.getText(bufferedImages));
             }
         });

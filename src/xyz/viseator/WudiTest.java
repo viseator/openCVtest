@@ -20,8 +20,8 @@ public class WudiTest {
         OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt", cutPic.getIndexes());
         cutPic.setOcr(new CutPic.RecognizeCharacters() {
             @Override
-            public String recognize(ArrayList<BufferedImage> bufferedImages,int dataType) {
-                return ocr.execute(bufferedImages, RowInfo.IS_STRING, true);
+            public String recognize(ArrayList<BufferedImage> bufferedImages,int dataType,boolean isIndex) {
+                return ocr.execute(bufferedImages, dataType, isIndex);
             }
         });
         for (int picId = 1; picId <= 37; picId++) {

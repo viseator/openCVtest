@@ -1,6 +1,5 @@
 package xyz.viseator;
 
-import com.lowagie.text.Row;
 import org.opencv.core.*;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
@@ -52,7 +51,7 @@ public class CutPic {
     private RecognizeCharacters ocr;
     private IndexReader indexReader;
 
-    public CutPic(){
+    public CutPic() {
         indexReader = new IndexReader("./index.txt");
     }
 
@@ -83,9 +82,10 @@ public class CutPic {
 
     /**
      * get the indexes in index.txt to get the right answer
+     *
      * @return Set<String> indexes
      */
-    public Set<String> getIndexes(){
+    public Set<String> getIndexes() {
         return indexReader.getName();
     }
 
@@ -256,8 +256,8 @@ public class CutPic {
                                 String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                         , character);
             }
-            rowInfo.setResult(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType()));
-            System.out.println(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType()));
+            rowInfo.setResult(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType(), false));
+            System.out.println(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType(), false));
         }
     }
 
@@ -275,7 +275,7 @@ public class CutPic {
                     , character);
         }
 
-        return ocr.recognize(convertMatsToBufferedImages(characters),RowInfo.IS_STRING);
+        return ocr.recognize(convertMatsToBufferedImages(characters), RowInfo.IS_STRING, true);
     }
 
     private ArrayList<Mat> cutCharacters(Mat mat, int dataType) {
@@ -506,7 +506,7 @@ public class CutPic {
         }
     }*/
     interface RecognizeCharacters {
-        String recognize(ArrayList<BufferedImage> bufferedImages,int dataType);
+        String recognize(ArrayList<BufferedImage> bufferedImages, int dataType, boolean isIndex);
     }
 }
 

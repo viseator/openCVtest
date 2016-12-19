@@ -39,6 +39,7 @@ public class CutPic {
     //the scale of a character's width in picture's width
     private static final double CHARACTER_SIZE = 0.019;
     private static final double IMAGE_WIDTH = 2592.0;
+    private static final double TABLE_CHARACTER_FACTOR = 0.43;
 
     private ArrayList<Mat> blockImages; //Store rows
     private ArrayList<RowInfo> rows;
@@ -46,6 +47,7 @@ public class CutPic {
     private Mat srcPic;
     private Mat dilateMuchPic;
     private int picId;
+    private double characterWidth;
     private int colNum = -1; //when find a valid col:colNum++
 
     private RecognizeCharacters ocr;
@@ -141,9 +143,11 @@ public class CutPic {
 
         getUniqueLines(lineYs, uniqueLineYs, 10);
 
+        setCharacterWidth(uniqueLineYs.size(), srcPic.height());
 //        showLines(srcPic, uniqueLineYs, false);
         blockImages = new ArrayList<>();
         if (uniqueLineYs.size() == 0) blockImages.add(srcPic);
+
         for (int i = 0; i < uniqueLineYs.size(); i++) {
             Rect rect;
             double y = uniqueLineYs.get(i);
@@ -360,8 +364,8 @@ public class CutPic {
             int iStart = i;
             int iEnd = i + 1;
             while (i < uniqueEmptyCols.size() - 3 &&
-                    chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < 25 &&
-                    uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < 50
+                    chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < characterWidth*0.8 &&
+                    uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < characterWidth * 1.3
                     ) {
                 chaWidth += uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i);
                 i += 2;
@@ -469,6 +473,12 @@ public class CutPic {
                 dst.add(((sum / num)));
             }
         }
+    }
+
+    private void setCharacterWidth(int size, double height) {
+        characterWidth = height / (size + 1) * TABLE_CHARACTER_FACTOR;
+        System.out.printf("The Character Width:");
+        System.out.println(characterWidth);
     }
 
     /**

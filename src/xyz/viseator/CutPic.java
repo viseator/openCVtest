@@ -143,8 +143,24 @@ public class CutPic {
 
         getUniqueLines(lineYs, uniqueLineYs, 10);
 
+        // TODO: 2016/12/19 delete other part of table
+        srcPic = new Mat(srcPic, new Rect(0, uniqueLineYs.get(0).intValue() , srcPic.width(),
+                (int) ((uniqueLineYs.get(uniqueLineYs.size() - 1) - uniqueLineYs.get(0)) )));
+
+        Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/" +
+                        String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                , srcPic);
+
+        for (int index = 1; index < uniqueLineYs.size(); index++) {
+            uniqueLineYs.set(index, uniqueLineYs.get(index) - uniqueLineYs.get(0));
+        }
+
+        uniqueLineYs.remove(uniqueLineYs.size() - 1);
+        uniqueLineYs.remove(0);
+        System.out.println(uniqueLineYs.size());
+        showLines(srcPic, uniqueLineYs, false);
+
         setCharacterWidth(uniqueLineYs.size(), srcPic.height());
-//        showLines(srcPic, uniqueLineYs, false);
         blockImages = new ArrayList<>();
         if (uniqueLineYs.size() == 0) blockImages.add(srcPic);
 
@@ -170,6 +186,9 @@ public class CutPic {
             //cut the source picture to cutMat
             Mat cutMat = new Mat(srcPic, rect);
 
+            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/1" +
+                            String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                    , cutMat);
             blockImages.add(cutMat);
         }
     }
@@ -355,7 +374,7 @@ public class CutPic {
 
         getBorders(emptyCols, uniqueEmptyCols, 5, 0);
 
-        showLines(srcMat, uniqueEmptyCols, true);
+//        showLines(srcMat, uniqueEmptyCols, true);
         //cut the image according to the left and right borders
         for (int i = 1; i < uniqueEmptyCols.size() - 1; i += 2) {
             Mat cutMat;
@@ -364,7 +383,7 @@ public class CutPic {
             int iStart = i;
             int iEnd = i + 1;
             while (i < uniqueEmptyCols.size() - 3 &&
-                    chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < characterWidth*0.8 &&
+                    chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < characterWidth * 0.8 &&
                     uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < characterWidth * 1.3
                     ) {
                 chaWidth += uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i);

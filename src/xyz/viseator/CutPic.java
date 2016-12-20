@@ -149,10 +149,6 @@ public class CutPic {
         srcPic = new Mat(srcPic, new Rect(0, uniqueLineYs.get(0).intValue(), srcPic.width(),
                 (int) ((uniqueLineYs.get(uniqueLineYs.size() - 1) - uniqueLineYs.get(0)))));
 
-        Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/" +
-                        String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
-                , srcPic);
-
         for (int index = 1; index < uniqueLineYs.size(); index++) {
             uniqueLineYs.set(index, uniqueLineYs.get(index) - uniqueLineYs.get(0));
         }
@@ -160,7 +156,6 @@ public class CutPic {
         uniqueLineYs.remove(uniqueLineYs.size() - 1);
         uniqueLineYs.remove(0);
 
-        setCharacterWidth(uniqueLineYs.size(), srcPic.height());
         blockImages = new ArrayList<>();
         if (uniqueLineYs.size() == 0) blockImages.add(srcPic);
 
@@ -225,7 +220,7 @@ public class CutPic {
             ArrayList<Double> uniqueLineXs = new ArrayList<>();
 
             getUniqueLines(lineXs, uniqueLineXs, 10);
-            showLines(image, uniqueLineXs, true);
+//            showLines(image, uniqueLineXs, true);
             //filter the invalid lines
 //            ArrayList<Double> betterLineXs = new ArrayList<>();
 //            filterLines(uniqueLineXs, betterLineXs, image.width());
@@ -263,7 +258,7 @@ public class CutPic {
                 Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/contentImages/" +
                                 String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                         , rowInfo.getContentImage());
-                System.out.println(rowInfo.getLeftBorder() + "_" + rowInfo.getRightBorder());
+                System.out.println(rowInfo.getNameOfRow());
             }
         }
     }
@@ -286,9 +281,9 @@ public class CutPic {
 
 
     private String getNameOfRow(ArrayList<Double> coordinates, Mat mat) {
-        Mat cutMat = new Mat(mat, new Rect(coordinates.get(0).intValue() + 5,
-                0,
-                (int) (coordinates.get(1) - coordinates.get(0) - 10), mat.height()));
+        Mat cutMat = new Mat(mat, new Rect(coordinates.get(0).intValue() + 10,
+                10,
+                (int) (coordinates.get(1) - coordinates.get(0) - 20), mat.height() - 20));
 
         ArrayList<Mat> characters = cutCharacters(cutMat, RowInfo.IS_STRING, true);
 
@@ -322,6 +317,18 @@ public class CutPic {
 
         if (isIndex) {
             getBorders(emptyRows, uniqueEmptyRows, 5, 0);
+            showLines(mat, uniqueEmptyRows, false);
+            Mat cutMat = new Mat(mat, new Rect(0,
+                    (uniqueEmptyRows.get(1).intValue()),
+                    mat.width(),
+                    (((int) (uniqueEmptyRows.get(2) - uniqueEmptyRows.get(1))))));
+            singleLines.add(cutSingleCha(cutMat));
+            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/" +
+                            String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
+                    , cutMat);
+            characterWidth = (uniqueEmptyRows.get(2) - uniqueEmptyRows.get(1)) * 0.92;
+            System.out.print("Character Width:");
+            System.out.println(characterWidth);
         } else {
             getUniqueLines(emptyRows, uniqueEmptyRows, 10);
 
@@ -332,7 +339,7 @@ public class CutPic {
                             mat.width(),
                             (((int) (uniqueEmptyRows.get(i + 1) - uniqueEmptyRows.get(i))))));
                     if (dataType == RowInfo.IS_STRING)
-                        singleLines.add(cutSingleCha(cutMat, i));
+                        singleLines.add(cutSingleCha(cutMat));
                     else {
                         ArrayList<Mat> line = new ArrayList<>();
                         line.add(cutMat);
@@ -360,7 +367,7 @@ public class CutPic {
      * @param srcMat source image
      * @return list of characters
      */
-    private ArrayList<Mat> cutSingleCha(Mat srcMat, int testNum) {
+    private ArrayList<Mat> cutSingleCha(Mat srcMat) {
         ArrayList<Mat> characters = new ArrayList<>();
         ArrayList<Double> emptyCols = new ArrayList<>();
         ArrayList<Double> uniqueEmptyCols = new ArrayList<>();
@@ -496,12 +503,6 @@ public class CutPic {
                 dst.add(((sum / num)));
             }
         }
-    }
-
-    private void setCharacterWidth(int size, double height) {
-        characterWidth = height / (size + 1) * TABLE_CHARACTER_FACTOR;
-        System.out.printf("The Character Width:");
-        System.out.println(characterWidth);
     }
 
     /**

@@ -27,19 +27,20 @@ public class CutPic {
     //the threshold when find the horizontal lines of table
     private static final int Y_THRESHOLD = 150;
     //the max gap of the intermittent line
-    private static final double Y_MAXLINEGAP = 20;
+    private static final double Y_MAXLINEGAP_FACTOR = 0.008;
 
     //similar with above,using in find vertical lines
     private static final int X_THRESHOLD = 0;
     //similar with above,using in find vertical lines
-    private static final double X_MAXLINEGAP_FACTOR = 0.2;
+    private static final double X_MAXLINEGAP_FACTOR = 0.1;
     //factor for the minimum length of line,X_MINLINELENGTH = image.height() * X_HEIGHT_FACTOR
-    private static final double X_HEIGHT_FACTOR = 0.9;
+    private static final double X_HEIGHT_FACTOR = 0.8;
 
     //the scale of a character's width in picture's width
     private static final double CHARACTER_SIZE = 0.019;
     private static final double IMAGE_WIDTH = 2592.0;
     private static final double TABLE_CHARACTER_FACTOR = 0.43;
+    private static final double FILTER_GAP = 0.1;
 
     private ArrayList<Mat> blockImages; //Store rows
     private ArrayList<RowInfo> rows;
@@ -124,7 +125,7 @@ public class CutPic {
         Mat lines = new Mat();
         //find lines and store in lines
         Imgproc.HoughLinesP(dilateMuchPic, lines, 1, Math.PI / 180, Y_THRESHOLD,
-                Y_MINLINELENGTH_FACTOR * srcPic.width(), Y_MAXLINEGAP);
+                Y_MINLINELENGTH_FACTOR * srcPic.width(), srcPic.width() * Y_MAXLINEGAP_FACTOR);
 
         //get the lines information from lines and store in lineYs
         for (int i = 0; i < lines.rows(); i++) {
@@ -143,9 +144,10 @@ public class CutPic {
 
         getUniqueLines(lineYs, uniqueLineYs, 10);
 
+//        showLines(srcPic, uniqueLineYs, false);
         // TODO: 2016/12/19 delete other part of table
-        srcPic = new Mat(srcPic, new Rect(0, uniqueLineYs.get(0).intValue() , srcPic.width(),
-                (int) ((uniqueLineYs.get(uniqueLineYs.size() - 1) - uniqueLineYs.get(0)) )));
+        srcPic = new Mat(srcPic, new Rect(0, uniqueLineYs.get(0).intValue(), srcPic.width(),
+                (int) ((uniqueLineYs.get(uniqueLineYs.size() - 1) - uniqueLineYs.get(0)))));
 
         Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/" +
                         String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
@@ -157,8 +159,6 @@ public class CutPic {
 
         uniqueLineYs.remove(uniqueLineYs.size() - 1);
         uniqueLineYs.remove(0);
-        System.out.println(uniqueLineYs.size());
-        showLines(srcPic, uniqueLineYs, false);
 
         setCharacterWidth(uniqueLineYs.size(), srcPic.height());
         blockImages = new ArrayList<>();
@@ -225,7 +225,7 @@ public class CutPic {
             ArrayList<Double> uniqueLineXs = new ArrayList<>();
 
             getUniqueLines(lineXs, uniqueLineXs, 10);
-
+            showLines(image, uniqueLineXs, true);
             //filter the invalid lines
 //            ArrayList<Double> betterLineXs = new ArrayList<>();
 //            filterLines(uniqueLineXs, betterLineXs, image.width());
@@ -272,7 +272,7 @@ public class CutPic {
     private void getContentOfRow() {
         for (RowInfo rowInfo : rows) {
             Mat contentImage = rowInfo.getContentImage();
-            ArrayList<Mat> characters = cutCharacters(contentImage, rowInfo.getDataType());
+            ArrayList<Mat> characters = cutCharacters(contentImage, rowInfo.getDataType(), false);
 
             for (Mat character : characters) {
                 Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/content/" +
@@ -290,7 +290,7 @@ public class CutPic {
                 0,
                 (int) (coordinates.get(1) - coordinates.get(0) - 10), mat.height()));
 
-        ArrayList<Mat> characters = cutCharacters(cutMat, RowInfo.IS_STRING);
+        ArrayList<Mat> characters = cutCharacters(cutMat, RowInfo.IS_STRING, true);
 
         for (Mat character : characters) {
             Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/nameOfRow/" +
@@ -301,7 +301,7 @@ public class CutPic {
         return ocr.recognize(convertMatsToBufferedImages(characters), RowInfo.IS_STRING, true);
     }
 
-    private ArrayList<Mat> cutCharacters(Mat mat, int dataType) {
+    private ArrayList<Mat> cutCharacters(Mat mat, int dataType, boolean isIndex) {
         ArrayList<ArrayList<Mat>> singleLines = new ArrayList<>();
         //store the y-coordinates of empty rows (which has few white pixel)
         ArrayList<Double> emptyRows = new ArrayList<>();
@@ -320,20 +320,24 @@ public class CutPic {
             if (count < 2) emptyRows.add((double) row);
         }
 
-        getUniqueLines(emptyRows, uniqueEmptyRows, 10);
+        if (isIndex) {
+            getBorders(emptyRows, uniqueEmptyRows, 5, 0);
+        } else {
+            getUniqueLines(emptyRows, uniqueEmptyRows, 10);
 
-        for (int i = 0; i < uniqueEmptyRows.size(); i++) {
-            if (i != uniqueEmptyRows.size() - 1) {
-                Mat cutMat = new Mat(mat, new Rect(0,
-                        (uniqueEmptyRows.get(i).intValue()),
-                        mat.width(),
-                        (((int) (uniqueEmptyRows.get(i + 1) - uniqueEmptyRows.get(i))))));
-                if (dataType == RowInfo.IS_STRING)
-                    singleLines.add(cutSingleCha(cutMat, i));
-                else {
-                    ArrayList<Mat> line = new ArrayList<>();
-                    line.add(cutMat);
-                    singleLines.add(line);
+            for (int i = 0; i < uniqueEmptyRows.size(); i++) {
+                if (i != uniqueEmptyRows.size() - 1) {
+                    Mat cutMat = new Mat(mat, new Rect(0,
+                            (uniqueEmptyRows.get(i).intValue()),
+                            mat.width(),
+                            (((int) (uniqueEmptyRows.get(i + 1) - uniqueEmptyRows.get(i))))));
+                    if (dataType == RowInfo.IS_STRING)
+                        singleLines.add(cutSingleCha(cutMat, i));
+                    else {
+                        ArrayList<Mat> line = new ArrayList<>();
+                        line.add(cutMat);
+                        singleLines.add(line);
+                    }
                 }
             }
         }
@@ -440,7 +444,7 @@ public class CutPic {
         for (int i = 0; i < src.size(); i++) {
             int recode = i;
             while (i != src.size() - 1 && src.get(i + 1) - src.get(i) <
-                    width/*filterGap*/) {
+                    width * FILTER_GAP) {
                 i++;
             }
             dst.add(src.get(recode));

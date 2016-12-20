@@ -24,7 +24,7 @@ public class WudiTest {
                 return ocr.execute(bufferedImages, dataType, isIndex);
             }
         });
-        for (int picId = 1; picId <= 55; picId++) {
+        for (int picId = 1; picId <= 49; picId++) {
 //        int picId = 31;
             cutPic.progress("./image/1 (" + String.valueOf(picId) + ").jpg", picId);
         }

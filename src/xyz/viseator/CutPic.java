@@ -233,6 +233,10 @@ public class CutPic {
             //find a valid image
 //            showLines(image, uniqueLineXs, true);
             String nameOfRow = getNameOfRow(uniqueLineXs, image);
+
+            ArrayList<Double> filteredLineXs = new ArrayList<>();
+            filterLines(uniqueLineXs, filteredLineXs);
+            showLines(image, filteredLineXs,true);
             RowInfo rowInfo = indexReader.getRowInfo(nameOfRow);
 
             int leftBorder = rowInfo.getLeftBorder();
@@ -240,14 +244,14 @@ public class CutPic {
 
             Rect rect;
 
-            if (uniqueLineXs.size() > rightBorder) {
-                rect = new Rect(uniqueLineXs.get(leftBorder).intValue() + 5,
+            if (filteredLineXs.size() > rightBorder) {
+                rect = new Rect(filteredLineXs.get(leftBorder).intValue() + 5,
                         0,
-                        (int) (uniqueLineXs.get(rightBorder) - uniqueLineXs.get(leftBorder) - 10), image.height());
+                        (int) (filteredLineXs.get(rightBorder) - filteredLineXs.get(leftBorder) - 10), image.height());
             } else {
-                rect = new Rect(uniqueLineXs.get(leftBorder).intValue() + 5,
+                rect = new Rect(filteredLineXs.get(leftBorder).intValue() + 5,
                         0,
-                        (int) (image.width() - uniqueLineXs.get(leftBorder) - 10), image.height());
+                        (int) (image.width() - filteredLineXs.get(leftBorder) - 10), image.height());
             }
             Mat contentImage = new Mat(image, rect);
             rowInfo.setContentImage(contentImage);
@@ -306,7 +310,7 @@ public class CutPic {
         double[] points;
         for (int row = 0; row < mat.rows(); row++) {
             int count = 0;
-            for (int col = 0; col < mat.cols(); col++) {
+            for (int col = 10; col < mat.cols(); col++) {
                 points = mat.get(row, col);
                 if (points[0] == 255) {
                     count++;
@@ -317,7 +321,7 @@ public class CutPic {
 
         if (isIndex) {
             getBorders(emptyRows, uniqueEmptyRows, 5, 0);
-            showLines(mat, uniqueEmptyRows, false);
+//            showLines(mat, uniqueEmptyRows, false);
             Mat cutMat = new Mat(mat, new Rect(0,
                     (uniqueEmptyRows.get(1).intValue()),
                     mat.width(),
@@ -330,8 +334,9 @@ public class CutPic {
             System.out.print("Character Width:");
             System.out.println(characterWidth);
         } else {
-            getUniqueLines(emptyRows, uniqueEmptyRows, 10);
 
+            getUniqueLines(emptyRows, uniqueEmptyRows, 10);
+//            showLines(mat,uniqueEmptyRows,false);
             for (int i = 0; i < uniqueEmptyRows.size(); i++) {
                 if (i != uniqueEmptyRows.size() - 1) {
                     Mat cutMat = new Mat(mat, new Rect(0,
@@ -384,7 +389,6 @@ public class CutPic {
         }
 
         getBorders(emptyCols, uniqueEmptyCols, 5, 0);
-
 //        showLines(srcMat, uniqueEmptyCols, true);
         //cut the image according to the left and right borders
         for (int i = 1; i < uniqueEmptyCols.size() - 1; i += 2) {
@@ -443,15 +447,14 @@ public class CutPic {
     /**
      * if the gap between lines less than filterGap*width, reserve the first of them and filter out others
      *
-     * @param src   source coordinates list
-     * @param dst   destination coordinates list
-     * @param width the width of image
+     * @param src source coordinates list
+     * @param dst destination coordinates list
      */
-    private void filterLines(ArrayList<Double> src, ArrayList<Double> dst, int width) {
+    private void filterLines(ArrayList<Double> src, ArrayList<Double> dst) {
         for (int i = 0; i < src.size(); i++) {
             int recode = i;
             while (i != src.size() - 1 && src.get(i + 1) - src.get(i) <
-                    width * FILTER_GAP) {
+                    5 * characterWidth) {
                 i++;
             }
             dst.add(src.get(recode));
@@ -471,7 +474,7 @@ public class CutPic {
                 pt1 = new Point(0, coordinate);
                 pt2 = new Point(srcPic.width(), coordinate);
             }
-            Imgproc.line(rgbMat, pt1, pt2, new Scalar(0, 0, 255), 2);
+            Imgproc.line(rgbMat, pt1, pt2, new Scalar(0, 0, 255), 1);
         }
         Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/showLines/" +
                         String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"

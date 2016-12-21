@@ -326,7 +326,7 @@ public class CutPic {
                     mat.width(),
                     (((int) (uniqueEmptyRows.get(2) - uniqueEmptyRows.get(1))))));
             characterWidth = (uniqueEmptyRows.get(2) - uniqueEmptyRows.get(1)) * 0.92;
-            singleLines.add(cutSingleCha(cutMat));
+            singleLines.add(cutSingleCha(cutMat, true));
             Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/" +
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , cutMat);
@@ -349,7 +349,7 @@ public class CutPic {
                             mat.width(),
                             (((int) (uniqueEmptyRows.get(i + 1) - uniqueEmptyRows.get(i))))));
                     if (dataType == RowInfo.IS_STRING)
-                        singleLines.add(cutSingleCha(cutMat));
+                        singleLines.add(cutSingleCha(cutMat, false));
                     else {
                         ArrayList<Mat> line = new ArrayList<>();
                         line.add(cutMat);
@@ -377,7 +377,7 @@ public class CutPic {
      * @param srcMat source image
      * @return list of characters
      */
-    private ArrayList<Mat> cutSingleCha(Mat srcMat) {
+    private ArrayList<Mat> cutSingleCha(Mat srcMat, boolean isIndex) {
         ArrayList<Mat> characters = new ArrayList<>();
         ArrayList<Double> emptyCols = new ArrayList<>();
         ArrayList<Double> uniqueEmptyCols = new ArrayList<>();
@@ -416,6 +416,12 @@ public class CutPic {
                     0,
                     (int) (uniqueEmptyCols.get(iEnd) - uniqueEmptyCols.get(iStart)),
                     srcMat.height()));
+
+            if (isIndex) {
+                Mat kernelErode = Imgproc.getStructuringElement(Imgproc.MORPH_ERODE, new Size(2, 2));
+                Imgproc.erode(cutMat, cutMat, kernelErode);
+            }
+
             Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/cutSingleCha/" +
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , cutMat);

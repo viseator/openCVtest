@@ -45,14 +45,20 @@ public class OCR {
     public String execute(ArrayList<BufferedImage> images, int isNum, boolean isIndex){
         StringBuilder builder = new StringBuilder();
         for(BufferedImage image : images){
-            builder.append((isNum == RowInfo.IS_STRING) ? handlerChi.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR)
+            builder.append((isNum == RowInfo.IS_STRING) ? handlerChi.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE)
                 : handlerNum.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
         }
         return (isIndex) ? OCRHandler.handleIndex(indexes, builder.toString())
                 : OCRHandler.handleDetail(builder.toString(), isNum == RowInfo.IS_NUM);
     }
 
-//    public void execute(String picPath, int numOfPic) {
+    public void executeTest(String picPath, int numOfPic) {
+
+        try {
+            System.out.println(handlerChi.getTextFromPic(ImageIO.read(new File(picPath)), ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 //        tableInfo = progressPic.progress(picPath, numOfPic);
 //        for (int row = 0; row < tableInfo.getRowsSize(); row++) {
 //            StringBuffer resultOfRowBuffer = new StringBuffer();
@@ -85,7 +91,7 @@ public class OCR {
 //        for (int i = 0; i < tableInfo.getRowsSize(); i++) {
 //            System.out.println(tableInfo.getRows(i).getResult());
 //        }
-//    }
+    }
 
 //    public void setExcelPath(String excelPath) {
 //        this.excelPath = excelPath;

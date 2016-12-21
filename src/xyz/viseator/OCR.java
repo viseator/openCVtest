@@ -45,7 +45,7 @@ public class OCR {
     public String execute(ArrayList<BufferedImage> images, int isNum, boolean isIndex){
         StringBuilder builder = new StringBuilder();
         for(BufferedImage image : images){
-            builder.append((isNum == RowInfo.IS_STRING) ? handlerChi.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_CHAR)
+            builder.append((isNum == RowInfo.IS_STRING) ? handlerChi.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE)
                 : handlerNum.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
         }
         return (isIndex) ? CharacterFixer.getRightIndex(indexes, builder.toString())

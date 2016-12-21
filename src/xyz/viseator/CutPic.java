@@ -58,7 +58,7 @@ public class CutPic {
         indexReader = new IndexReader("./index.txt");
     }
 
-    public void progress(String path, int picId) {
+    public ArrayList<RowInfo> progress(String path, int picId) {
         srcPic = Imgcodecs.imread(path, Imgcodecs.CV_LOAD_IMAGE_GRAYSCALE);
         this.picId = picId;
 
@@ -68,6 +68,7 @@ public class CutPic {
         cutImagesToRows();
         cutImagesToCols();
         getContentOfRow();
+        return rows;
     }
 
     public void setOcr(RecognizeCharacters ocr) {

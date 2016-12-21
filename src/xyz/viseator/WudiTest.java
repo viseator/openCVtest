@@ -11,6 +11,9 @@ import java.util.ArrayList;
  * Created by viseator on 2016/12/12.
  */
 public class WudiTest {
+    private static String EXCEL_PATH = "./source/交付表格.xlsx";
+    private static String OUTPUT_PATH = "./交付表格.xlsx";
+
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
     }
@@ -20,7 +23,7 @@ public class WudiTest {
         OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt", cutPic.getIndexes());
         cutPic.setOcr(new CutPic.RecognizeCharacters() {
             @Override
-            public String recognize(ArrayList<BufferedImage> bufferedImages,int dataType,boolean isIndex) {
+            public String recognize(ArrayList<BufferedImage> bufferedImages, int dataType, boolean isIndex) {
                 return ocr.execute(bufferedImages, dataType, isIndex);
             }
         });
@@ -28,7 +31,10 @@ public class WudiTest {
 //        int picId = 31;
 //            cutPic.progress("./image/1 (" + String.valueOf(picId) + ").jpg", picId);
 //        }
-            cutPic.progress("./image/test.jpg",1);
+        ArrayList<RowInfo> rowInfos;
+        rowInfos = cutPic.progress("./image/test.jpg", 1);
+        OutputExcel outputExcel = new OutputExcel(EXCEL_PATH, OUTPUT_PATH);
+        outputExcel.storeResultToExcel(rowInfos);
 //        IndexReader indexReader = new IndexReader("./index.txt");
 //        System.out.println(indexReader.getRowInfo("舒张压").getLeftBorder() + " " + indexReader.getRowInfo("舒张压").getRightBorder());
     }

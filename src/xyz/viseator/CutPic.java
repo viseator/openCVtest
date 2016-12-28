@@ -37,10 +37,7 @@ public class CutPic {
     private static final double X_HEIGHT_FACTOR = 0.8;
 
     //the scale of a character's width in picture's width
-    private static final double CHARACTER_SIZE = 0.019;
-    private static final double IMAGE_WIDTH = 2592.0;
-    private static final double TABLE_CHARACTER_FACTOR = 0.43;
-    private static final double FILTER_GAP = 0.1;
+    private static final double IMAGE_WIDTH = 1900;
 
     private ArrayList<Mat> blockImages; //Store rows
     private ArrayList<RowInfo> rows;
@@ -63,6 +60,11 @@ public class CutPic {
         this.picId = picId;
 
         rows = new ArrayList<>();
+
+        if (srcPic.width() > IMAGE_WIDTH) {
+            resizePic();
+        }
+
         binarization();
         deNoise();
         cutImagesToRows();
@@ -74,6 +76,15 @@ public class CutPic {
     public void setOcr(RecognizeCharacters ocr) {
         this.ocr = ocr;
     }
+
+    private void resizePic() {
+        double scale = IMAGE_WIDTH / srcPic.width();
+        Size size = new Size(srcPic.width() * scale, srcPic.height() * scale);
+        Mat tempPic = new Mat(size,CvType.CV_8UC1);
+        Imgproc.resize(srcPic,tempPic,size);
+        srcPic = tempPic;
+    }
+
 
     /**
      * binarization the srouce picture

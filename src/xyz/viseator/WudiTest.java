@@ -16,6 +16,9 @@ public class WudiTest {
     }
 
     public static void main(String args[]) {
+
+//        OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt", null);
+        //ocr.executeTest();
         CutPic cutPic = new CutPic();
         OCR ocr = new OCR("C:\\Program Files (x86)\\Tesseract-OCR", "./dic.txt", cutPic.getIndexes());
         cutPic.setOcr(new CutPic.RecognizeCharacters() {

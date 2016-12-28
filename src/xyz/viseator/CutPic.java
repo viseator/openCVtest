@@ -80,7 +80,7 @@ public class CutPic {
     private void binarization() {
         //blockSize and C are the best parameters for table
         Imgproc.adaptiveThreshold(srcPic, srcPic, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY_INV, BLOCK_SIZE, C_THRESHOLD);
-        Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/binarization/" + String.valueOf(picId) + ".jpg", srcPic);
+        Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/binarization/" + String.valueOf(picId) + ".jpg", srcPic);
     }
 
     /**
@@ -103,15 +103,15 @@ public class CutPic {
         Imgproc.erode(srcPic, srcPic, kernelErode);
 
         //kernel for dilate, size:the size off the dilation
-        Mat kernelDilate = Imgproc.getStructuringElement(Imgproc.MORPH_DILATE, new Size(2, 2));
-        Imgproc.dilate(srcPic, srcPic, kernelDilate);
+//        Mat kernelDilate = Imgproc.getStructuringElement(Imgproc.MORPH_DILATE, new Size(2, 2));
+//        Imgproc.dilate(srcPic, srcPic, kernelDilate);
 
         //dilate much, for finding all lines
         dilateMuchPic = new Mat();
         Mat kernelDilateMuch = Imgproc.getStructuringElement(Imgproc.MORPH_DILATE, new Size(12, 12));
         Imgproc.dilate(srcPic, dilateMuchPic, kernelDilateMuch);
 
-        Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/deNoise/" + String.valueOf(picId) + ".jpg", srcPic);
+        Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/deNoise/" + String.valueOf(picId) + ".jpg", srcPic);
     }
 
     /**
@@ -180,7 +180,7 @@ public class CutPic {
             //cut the source picture to cutMat
             Mat cutMat = new Mat(srcPic, rect);
 
-            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/1" +
+            Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/temp/" +
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , cutMat);
             blockImages.add(cutMat);
@@ -258,7 +258,7 @@ public class CutPic {
         }
         for (RowInfo rowInfo : rows) {
             if (rowInfo != null) {
-                Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/contentImages/" +
+                Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/contentImages/" +
                                 String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                         , rowInfo.getContentImage());
             }
@@ -272,7 +272,7 @@ public class CutPic {
             ArrayList<Mat> characters = cutCharacters(contentImage, rowInfo.getDataType(), false);
 
             for (Mat character : characters) {
-                Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/content/" +
+                Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/content/" +
                                 String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                         , character);
             }
@@ -290,7 +290,7 @@ public class CutPic {
         ArrayList<Mat> characters = cutCharacters(cutMat, RowInfo.IS_STRING, true);
 
         for (Mat character : characters) {
-            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/nameOfRow/" +
+            Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/nameOfRow/" +
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , character);
         }
@@ -327,7 +327,7 @@ public class CutPic {
                     (((int) (uniqueEmptyRows.get(2) - uniqueEmptyRows.get(1))))));
             characterWidth = (uniqueEmptyRows.get(2) - uniqueEmptyRows.get(1)) * 0.92;
             singleLines.add(cutSingleCha(cutMat));
-            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/temp/" +
+            Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/tempOne/" +
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , cutMat);
             System.out.print("Character Width:");
@@ -416,7 +416,7 @@ public class CutPic {
                     0,
                     (int) (uniqueEmptyCols.get(iEnd) - uniqueEmptyCols.get(iStart)),
                     srcMat.height()));
-            Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/cutSingleCha/" +
+            Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/cutSingleCha/" +
                             String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                     , cutMat);
             characters.add(cutMat);
@@ -481,7 +481,7 @@ public class CutPic {
             }
             Imgproc.line(rgbMat, pt1, pt2, new Scalar(0, 0, 255), 2);
         }
-        Imgcodecs.imwrite("C:/Users/visea/Desktop/test/new/showLines/" +
+        Imgcodecs.imwrite("C:/Users/Lily/Desktop/picTest/showLines/" +
                         String.valueOf(picId) + String.valueOf(++colNum) + ".jpg"
                 , rgbMat);
 

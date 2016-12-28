@@ -48,11 +48,12 @@ public class OCR {
             builder.append((isNum == RowInfo.IS_STRING) ? handlerChi.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE)
                 : handlerNum.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
         }
+        System.out.println(builder.toString());
         return (isIndex) ? OCRHandler.handleIndex(indexes, builder.toString())
                 : OCRHandler.handleDetail(builder.toString(), isNum == RowInfo.IS_NUM);
     }
 
-    public void executeTest(String picPath, int numOfPic) {
+    public void executeTest(String picPath) {
 
         try {
             System.out.println(handlerChi.getTextFromPic(ImageIO.read(new File(picPath)), ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));

@@ -300,6 +300,7 @@ public class CutPic {
                 rowInfo.setResult(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType(), false));
                 System.out.println(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType(), false));
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Error when get content of row");
             }
         }

@@ -48,7 +48,7 @@ public class OCR {
             builder.append((isNum == RowInfo.IS_STRING) ? handlerChi.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE)
                 : handlerNum.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
         }
-        System.out.println(builder.toString());
+//        System.out.println(builder.toString());
         return (isIndex) ? OCRHandler.handleIndex(indexes, OCRHandler.handleDetail(builder.toString(), false))
                 : OCRHandler.handleDetail(builder.toString(), isNum == RowInfo.IS_NUM);
     }

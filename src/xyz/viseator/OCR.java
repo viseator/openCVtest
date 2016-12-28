@@ -49,7 +49,7 @@ public class OCR {
                 : handlerNum.getTextFromPic(image, ITessAPI.TessPageSegMode.PSM_SINGLE_LINE));
         }
         System.out.println(builder.toString());
-        return (isIndex) ? OCRHandler.handleIndex(indexes, builder.toString())
+        return (isIndex) ? OCRHandler.handleIndex(indexes, OCRHandler.handleDetail(builder.toString(), false))
                 : OCRHandler.handleDetail(builder.toString(), isNum == RowInfo.IS_NUM);
     }
 

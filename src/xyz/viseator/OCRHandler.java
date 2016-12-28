@@ -61,19 +61,29 @@ public class OCRHandler {
 
     private static String handleNum(String output){
         StringBuffer resultBuffer = new StringBuffer(output);
-        if(!resultBuffer.toString().contains(".")) {
-            for (int i = 0; i < resultBuffer.length(); i++) {
-                if(resultBuffer.charAt(i) == ' ' && resultBuffer.charAt(i + 1) == ' '){
+        boolean findDot = false;
+        if(!output.contains(".")) {
+            for (int i = 0; i < output.length(); i++) {
+                if(output.charAt(i) == ' ' && output.charAt(i + 1) == ' '){
                     resultBuffer.setCharAt(i, '.');
                     break;
                 }
             }
         }
-        for(int i = 0; i < resultBuffer.length(); i++){
-            if(resultBuffer.charAt(i) == ' ')
+        for(int i = 0, count = 0; i < output.length() && count < 2; i++){
+            if(findDot)
+                count++;
+            if(output.charAt(i) == '.')
+                if(!findDot && (i != output.length() - 1)) {
+                    findDot = true;
+                }else{
+                    resultBuffer.deleteCharAt(i);
+                    count--;
+                }
+            if(output.charAt(i) == ' ') {
                 resultBuffer.deleteCharAt(i);
-            if(resultBuffer.charAt(i) == '.' && (i == resultBuffer.length() - 1))
-                resultBuffer.deleteCharAt(i);
+                count--;
+            }
         }
         return resultBuffer.toString();
     }

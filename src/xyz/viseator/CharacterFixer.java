@@ -22,12 +22,12 @@ public class CharacterFixer {
         StringBuffer buffer = new StringBuffer(output);
         for(int i = 0; i < buffer.length(); i++){
             if(keySet.contains(buffer.charAt(i))) {
-                if ((i == 0 && wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i + 1)))) ||
-                        (i == buffer.length() - 1 &&
+                if ((i == 0 && i != buffer.length() -1 && wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i + 1)))) ||
+                        (i != 0 && i == buffer.length() - 1 &&
                                 wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i - 1)))) ||
                         (i != buffer.length() - 1 && i != 0 &&
-                                wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i - 1)))
-                                || wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i + 1))))) {
+                                (wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i - 1)))
+                                || wordsList.get(buffer.charAt(i)).get(1).contains(Character.toString(buffer.charAt(i + 1)))))) {
                     buffer.setCharAt(i, wordsList.get(buffer.charAt(i)).get(0).charAt(0));
                 }
             }

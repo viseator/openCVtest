@@ -70,18 +70,20 @@ public class OCRHandler {
                 }
             }
         }
-        for(int i = 0, count = 0; i < output.length() && count < 2; i++){
+        for(int i = 0, count = 0; i < resultBuffer.length() && count < 2; i++){
             if(findDot)
                 count++;
-            if(output.charAt(i) == '.')
-                if(!findDot && (i != output.length() - 1)) {
+            if(resultBuffer.charAt(i) == '.')
+                if(!findDot && (i != resultBuffer.length() - 1)) {
                     findDot = true;
                 }else{
                     resultBuffer.deleteCharAt(i);
+                    i--;
                     count--;
                 }
-            if(output.charAt(i) == ' ') {
+            if(resultBuffer.charAt(i) == ' ') {
                 resultBuffer.deleteCharAt(i);
+                i--;
                 count--;
             }
         }

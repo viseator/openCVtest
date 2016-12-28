@@ -145,6 +145,7 @@ public class CutPic {
 
         getUniqueLines(lineYs, uniqueLineYs, 10);
 
+//        showLines(srcPic,uniqueLineYs,false);
         srcPic = new Mat(srcPic, new Rect(0, uniqueLineYs.get(0).intValue(), srcPic.width(),
                 (int) ((uniqueLineYs.get(uniqueLineYs.size() - 1) - uniqueLineYs.get(0)))));
 
@@ -242,7 +243,7 @@ public class CutPic {
 
             ArrayList<Double> filteredLineXs = new ArrayList<>();
             filterLines(uniqueLineXs, filteredLineXs);
-            showLines(image, filteredLineXs, true);
+            showLines(image, uniqueLineXs, true);
             RowInfo rowInfo = indexReader.getRowInfo(nameOfRow);
 
             int leftBorder = rowInfo.getLeftBorder();
@@ -287,7 +288,7 @@ public class CutPic {
                 }
                 rowInfo.setResult(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType(), false));
                 System.out.println(ocr.recognize(convertMatsToBufferedImages(characters), rowInfo.getDataType(), false));
-            }catch (Exception e){
+            } catch (Exception e) {
                 System.out.println("Error when get content of row");
             }
         }
@@ -348,8 +349,12 @@ public class CutPic {
 
             getUniqueLines(emptyRows, uniqueEmptyRows, 10);
 
-            if (emptyRows.get(0) > mat.height() * 0.3) uniqueEmptyRows.add(0, 0.0);
-            if (emptyRows.get(emptyRows.size() - 1) < mat.height() * 0.75) {
+            double topPadding;
+            if (emptyRows.size() >= 3) topPadding = 0.2;
+            else topPadding = 0.25;
+
+            if (emptyRows.get(0) > mat.height() * topPadding) uniqueEmptyRows.add(0, 0.0);
+            if (emptyRows.get(emptyRows.size() - 1) < mat.height() * (1 - topPadding)) {
                 uniqueEmptyRows.add((double) mat.height());
             }
 
@@ -416,7 +421,7 @@ public class CutPic {
             int iEnd = i + 1;
             while (i < uniqueEmptyCols.size() - 3 &&
                     chaWidth + uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i) < characterWidth * 0.8 &&
-                    chaWidth + uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < characterWidth * 1.2
+                    chaWidth + uniqueEmptyCols.get(i + 3) - uniqueEmptyCols.get(i) < characterWidth * 1.15
                     ) {
                 chaWidth += uniqueEmptyCols.get(i + 1) - uniqueEmptyCols.get(i);
                 i += 2;
